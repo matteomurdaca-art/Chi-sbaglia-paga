@@ -11,7 +11,7 @@ Non basta sapere le risposte: bisogna prevedere **quando gli altri sbaglieranno*
 
 Partita da 10 turni, si parte con 15 monete. Il ruolo si alterna a ogni turno:
 
-- **Da Rispondente** — rispondi alla domanda entro 10 secondi. Il Banco ha già
+- **Da Rispondente** — rispondi alla domanda entro 15 secondi. Il Banco ha già
   piazzato la sua scommessa su di te, coperta.
 - **Da Puntatore** — il Banco deve rispondere: scegli la posta (1, 2 o 3 monete)
   e scommetti se indovinerà o sbaglierà.
@@ -44,11 +44,16 @@ browser. Non richiede installazione né connessione dopo il primo caricamento.
 
 ## Stato del progetto
 
-Prototipo v0.3, in fase di playtest.
+Prototipo v0.4, in fase di playtest.
 Esiste anche una versione fisica del gioco (carte, gettoni, regolamento) in Print & Play.
 
 Feedback benvenuti: cosa funziona, cosa annoia, se il Banco è troppo prevedibile
-o troppo casuale, e se 10 secondi sono il tempo giusto.
+o troppo casuale, e se il tempo a disposizione è quello giusto.
+
+## Contatti
+
+Per feedback, segnalazioni o proposte editoriali:
+**chisbagliapaga@gmail.com**
 
 ---
 
