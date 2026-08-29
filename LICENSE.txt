@@ -1,0 +1,46 @@
+TUTTI I DIRITTI RISERVATI
+=========================
+
+"Chi Sbaglia Paga" — gioco di quiz, bluff e scommessa
+Copyright (c) 2026 Matteo Murdaca. Tutti i diritti riservati.
+
+Questo repository contiene il prototipo digitale del gioco "Chi Sbaglia Paga",
+comprensivo di codice sorgente, regolamento, testi delle domande, grafica e
+identità visiva.
+
+CONDIZIONI D'USO
+----------------
+
+Il presente materiale è reso disponibile al solo scopo di consentirne la prova
+da parte di persone espressamente invitate dall'autore (playtest).
+
+NON è concessa alcuna licenza, esplicita o implicita, per:
+
+  - copiare, riprodurre o ridistribuire il codice sorgente o parti di esso;
+  - modificare, adattare o creare opere derivate;
+  - utilizzare il materiale a fini commerciali, di lucro o promozionali;
+  - pubblicare il gioco, in forma fisica o digitale, con qualsiasi nome;
+  - riutilizzare la grafica, il logo, i testi o il regolamento.
+
+Ogni altro utilizzo richiede l'autorizzazione scritta preventiva dell'autore.
+
+L'assenza di una licenza open source è deliberata: ai sensi della normativa
+sul diritto d'autore, in mancanza di una licenza espressa nessun diritto di
+utilizzo è trasferito a terzi.
+
+NOTA
+----
+
+Il diritto d'autore tutela la forma espressiva di quest'opera (codice, testi,
+grafica, regolamento scritto). Le meccaniche di gioco in quanto tali non sono
+oggetto di privativa.
+
+"Chi Sbaglia Paga" è utilizzato dall'autore come segno distintivo del progetto.
+
+CONTATTI
+--------
+
+Matteo Murdaca
+[inserire email di contatto]
+
+Prototipo in sviluppo — versione 0.3
