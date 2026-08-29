@@ -189,7 +189,7 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · Sfida al Banco · v0.5<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · Sfida al Banco · v0.6<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
 <div class="overlay" id="startOverlay">
@@ -417,30 +417,33 @@ const QUESTIONS = [
 ];
 
 /* ---- personalità del Banco ---- */
+/* frasi comuni a tutti i caratteri: non devono rivelare la personalità */
+const SAYS_ANSWER=["Vediamo un po'…","Ci penso su.","Ah, questa…","Dammi un secondo.",
+  "Mmh, interessante.","Ok, ci provo.","Questa la conosco… forse.","Aspetta che ragiono."];
+const SAYS_BET=["Ho la mia idea.","Vediamo come va.","Punto e vediamo.","Ci scommetto qualcosa.",
+  "Ho deciso.","La mia puntata è fatta.","Sento qualcosa.","Scelta fatta."];
+
 const PERSONAS = {
   prudente:{
-    nome:"prudente", face:"🧐", reveal:"Il Banco era PRUDENTE: rispondeva bene, ma puntava su di te con cautela.",
+    nome:"prudente", face:"🎩", reveal:"Il Banco era PRUDENTE: rispondeva bene, ma puntava su di te con cautela.",
     // quanto spesso il Banco risponde bene rispetto alla difficoltà (competenza)
     skill:0.22,       // bonus: sbaglia meno
     fumble:0.05,      // papera casuale anche sulle facili
     // da Puntatore contro di te: tende a puntare GIUSTO (crede negli altri)
     betWrongBias:-0.15,
-    saysAnswering:["Vado sul sicuro…","Con calma, la ragiono.","Meglio non rischiare."],
-    saysBetting:["Credo tu ce la faccia.","Ti do fiducia… forse.","Non mi fido dei tranelli."]
+    saysAnswering:SAYS_ANSWER, saysBetting:SAYS_BET
   },
   spavaldo:{
-    nome:"spavaldo", face:"😎", reveal:"Il Banco era SPAVALDO: sicuro di sé, ma la sicurezza lo tradiva spesso.",
+    nome:"spavaldo", face:"🎩", reveal:"Il Banco era SPAVALDO: sicuro di sé, ma la sicurezza lo tradiva spesso.",
     skill:-0.10,      // sbaglia di più di quanto sembri
     fumble:0.15,      // papera spesso anche le facili
     betWrongBias:0.20, // da Puntatore scommette volentieri che sbagli
-    saysAnswering:["Questa la so di sicuro.","Facile, troppo facile.","Nessun problema, guarda."],
-    saysBetting:["Secondo me toppi.","Questa non la sai…","Scommetto che sbagli!"]
+    saysAnswering:SAYS_ANSWER, saysBetting:SAYS_BET
   },
   lunatico:{
-    nome:"lunatico", face:"🤪", reveal:"Il Banco era LUNATICO: imprevedibile, un turno geniale e uno disastroso.",
+    nome:"lunatico", face:"🎩", reveal:"Il Banco era LUNATICO: imprevedibile, un turno geniale e uno disastroso.",
     skill:0.0, fumble:0.18, betWrongBias:0.0, chaos:0.28,  // aggiunge rumore forte
-    saysAnswering:["Mah, vediamo…","Oggi chi lo sa.","Tiro a indovinare, dai."],
-    saysBetting:["Sensazione strana…","Faccio a caso, ammetto.","Chissà, punto così."]
+    saysAnswering:SAYS_ANSWER, saysBetting:SAYS_BET
   }
 };
 const CONFIDENT=["L'ho già sentita questa.","Tranquilli, ci sono.","Questa è nelle mie corde."];
@@ -548,7 +551,7 @@ function nextTurn(){
 function renderAnswer(){
   const bankWrong = bankBetsWrongOnYou(); // puntata coperta del Banco
   // il Banco "commenta" la sua fiducia (a volte fuorviante)
-  bankSay(bankWrong? persona.saysBetting : ["Punto che ce la fai.","Ti vedo sicuro.","Vada per il sì."]);
+  bankSay(SAYS_BET);
   $('prompt').innerHTML=`Il <b>Banco</b> ha puntato su di te… coperto. Rispondi!`;
   const opts=shuffle([current.a, ...current.wrong]);
   const box=document.createElement('div'); box.className='options';
@@ -708,12 +711,12 @@ const STEPS = [
    </div>`},
 
  {html:`<div class="big-ic">🕵️</div><h2>IL BANCO HA UN CARATTERE</h2>
-   <p>Ogni partita ne pesca uno <b style="color:var(--giallo)">a caso e nascosto</b>. Cambia come risponde e come scommette: guarda cosa dice e come si comporta per capire chi hai davanti.</p>
+   <p>Ogni partita ne pesca uno <b style="color:var(--giallo)">a caso e nascosto</b>. Cambia come risponde e come scommette — ma <b>non si vede</b>: puoi capirlo solo osservando cosa fa, turno dopo turno.</p>
    <div class="box">
-     <div class="persona"><span class="f">🧐</span><span><b>Prudente</b> — risponde bene, ma su di te punta con cautela.</span></div>
-     <div class="persona"><span class="f">😎</span><span><b>Spavaldo</b> — sicurissimo di sé… e proprio per questo <b>papera spesso</b>.</span></div>
-     <div class="persona"><span class="f">🤪</span><span><b>Lunatico</b> — un turno geniale e uno disastroso. Imprevedibile.</span></div>
-     <div style="opacity:.7;margin-top:8px">Attenzione: <b>sbaglia anche le domande facili</b>, e le sue frasi a volte sono un bluff. Scoprirai chi era solo a fine partita.</div>
+     <div class="persona"><span class="f">•</span><span><b>Prudente</b> — risponde bene, ma su di te punta con cautela.</span></div>
+     <div class="persona"><span class="f">•</span><span><b>Spavaldo</b> — sbaglia più di quanto sembri.</span></div>
+     <div class="persona"><span class="f">•</span><span><b>Lunatico</b> — un turno geniale e uno disastroso.</span></div>
+     <div style="opacity:.7;margin-top:8px">Aspetto e frasi sono <b>sempre uguali</b> per tutti: l'unico indizio è l'<b>identikit</b> in alto, che registra risposte e puntate. Scoprirai chi era solo a fine partita.</div>
    </div>`},
 
  {html:`<div class="big-ic">⏱️</div><h2>HAI 15 SECONDI</h2>
