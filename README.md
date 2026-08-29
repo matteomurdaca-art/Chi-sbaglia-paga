@@ -44,7 +44,7 @@ browser. Non richiede installazione né connessione dopo il primo caricamento.
 
 ## Stato del progetto
 
-Prototipo v0.4, in fase di playtest.
+Prototipo v0.5, in fase di playtest. 200 domande su 7 categorie.
 Esiste anche una versione fisica del gioco (carte, gettoni, regolamento) in Print & Play.
 
 Feedback benvenuti: cosa funziona, cosa annoia, se il Banco è troppo prevedibile
