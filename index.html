@@ -133,6 +133,24 @@
   .panel p{opacity:.85; font-size:14px; line-height:1.5; margin-bottom:8px;}
   .panel .rules{background:var(--antracite); border-radius:14px; padding:14px 16px; text-align:left; font-size:13px; line-height:1.6; margin:14px 0; border:1px solid #000;}
   .panel .rules b{color:var(--giallo);}
+  /* progressione e livelli */
+  .lvbox{background:rgba(255,255,255,.05); border:1px solid #000; border-radius:14px;
+    padding:12px 14px; margin:12px 0 6px; text-align:left;}
+  .lvtop{display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:600; margin-bottom:8px;}
+  .lvname{color:var(--giallo);} .lvcoins{color:var(--oro);}
+  .lvtrack{height:10px; border-radius:6px; background:#1c1c20; overflow:hidden; border:1px solid #000;}
+  .lvfill{height:100%; border-radius:6px; background:linear-gradient(90deg,#F5B800,#FFD24D); transition:width .6s ease;}
+  .lvnext{font-size:11.5px; opacity:.65; margin-top:6px;} .lvnext b{color:var(--giallo);}
+  .premio{font-family:'Anton',sans-serif; font-size:26px; color:var(--oro); margin:10px 0 2px;
+    animation:pop .5s ease;}
+  .premio.zero{font-family:'Fredoka'; font-size:13px; color:#999; font-weight:400;}
+  .levelup{background:linear-gradient(135deg,rgba(245,184,0,.22),rgba(215,38,29,.18));
+    border:1px solid var(--giallo); border-radius:14px; padding:12px; margin:10px 0;
+    font-family:'Anton',sans-serif; font-size:19px; color:var(--giallo); letter-spacing:.5px;
+    animation:pop .6s ease;}
+  .levelup span{font-family:'Fredoka'; font-size:12.5px; color:var(--panna); opacity:.8; letter-spacing:0; font-weight:400;}
+  .stats{font-size:11.5px; opacity:.5; margin-top:8px;}
+
   /* schermata di avvio: monete, firma, animazioni */
   #coinsCanvas{position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none;}
   .overlay .panel{position:relative; z-index:2; background:rgba(10,10,12,.82);
@@ -217,7 +235,7 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · Sfida al Banco · v1.1<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · Sfida al Banco · v1.2<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
 <div class="overlay" id="startOverlay">
@@ -228,7 +246,7 @@
     <button class="cta" id="startBtn">AVANTI</button>
     <button class="skip" id="skipBtn">salta e gioca</button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span>v1.1 · © 2026 · tutti i diritti riservati</span></div>
+      <span>v1.2 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -239,6 +257,7 @@
     <div class="final-score" style="font-size:16px;opacity:.8">Banco <span id="endBank">0</span></div>
     <p id="endMsg"></p>
     <p id="endReveal" style="opacity:.7;font-size:13px"></p>
+    <div id="endProgress"></div>
     <button class="cta" id="againBtn">RIGIOCA</button>
   </div>
 </div>
@@ -685,6 +704,52 @@ let deck=[], turn=0, me=START, bank=START, current=null, role=null, persona=null
 let timerId=null, timeLeft=0, lastTick=0;
 let bankHits=0, bankMiss=0, bankBetsW=0, bankBetsG=0;   // storico per indizi sul carattere
 const seen = new Set();   // domande già uscite: evita ripetizioni tra partite
+
+/* ---------- PROGRESSIONE: monete accumulate, livelli, salvataggio ---------- */
+const LIVELLI = [
+  {n:"Novellino",        soglia:0,    ic:"🎫", skill:0.00, astuzia:0.00,
+   msg:"Il Banco ti studia appena."},
+  {n:"Scommettitore",    soglia:30,   ic:"🎲", skill:0.04, astuzia:0.10,
+   msg:"Il Banco inizia a leggerti meglio."},
+  {n:"Giocatore d'azzardo", soglia:90, ic:"♠️", skill:0.08, astuzia:0.20,
+   msg:"Il Banco punta con più precisione."},
+  {n:"Bluffatore",       soglia:180,  ic:"🃏", skill:0.12, astuzia:0.30,
+   msg:"Il Banco bluffa e sbaglia molto meno."},
+  {n:"Squalo",           soglia:300,  ic:"🦈", skill:0.16, astuzia:0.40,
+   msg:"Il Banco è al massimo: leggerlo è un'impresa."}
+];
+const SAVE_KEY = "csp_progresso_v1";
+let banca = 0, partite = 0, vinte = 0;   // progresso persistente
+
+function caricaProgresso(){
+  try{
+    const raw = localStorage.getItem(SAVE_KEY);
+    if(raw){ const d=JSON.parse(raw); banca=d.banca||0; partite=d.partite||0; vinte=d.vinte||0; }
+  }catch(e){}
+}
+function salvaProgresso(){
+  try{ localStorage.setItem(SAVE_KEY, JSON.stringify({banca,partite,vinte})); }catch(e){}
+}
+function livelloDi(m){
+  let l=LIVELLI[0];
+  for(const x of LIVELLI) if(m>=x.soglia) l=x;
+  return l;
+}
+function prossimoLivello(m){
+  for(const x of LIVELLI) if(m<x.soglia) return x;
+  return null;
+}
+function barraLivello(){
+  const lv=livelloDi(banca), next=prossimoLivello(banca);
+  const pct = next ? Math.round((banca-lv.soglia)/(next.soglia-lv.soglia)*100) : 100;
+  return `<div class="lvbox">
+    <div class="lvtop"><span class="lvname">${lv.ic} ${lv.n}</span>
+      <span class="lvcoins">🪙 ${banca}</span></div>
+    <div class="lvtrack"><div class="lvfill" style="width:${pct}%"></div></div>
+    <div class="lvnext">${ next ? `${next.soglia-banca} monete al livello <b>${next.n}</b>`
+      : 'Livello massimo raggiunto!' }</div>
+  </div>`;
+}
 const $=id=>document.getElementById(id);
 const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
 const pick=a=>a[Math.floor(Math.random()*a.length)];
@@ -734,18 +799,22 @@ function updateScores(noflash){
 
 /* il Banco risponde bene? combina difficoltà, skill, papere e caos del carattere */
 function bankAnswersCorrectly(){
-  let pCorrect = (1 - current.diff) + persona.skill;
+  const lv = livelloDi(banca);
+  let pCorrect = (1 - current.diff) + persona.skill + lv.skill;
   if(persona.chaos){ pCorrect += (Math.random()*2-1)*persona.chaos; }   // lunatico: forte rumore
   pCorrect = clamp(pCorrect, 0.05, 0.95);
   let correct = Math.random() < pCorrect;
   // papera: anche una facile può cadere
-  if(correct && Math.random() < persona.fumble) correct=false;
+  const fum = Math.max(0.02, persona.fumble - lv.skill*0.5);   // ai livelli alti papera meno
+  if(correct && Math.random() < fum) correct=false;
   return correct;
 }
 /* da Puntatore, il Banco scommette SBAGLIATO su di te con questa probabilità */
 function bankBetsWrongOnYou(){
-  let p = current.diff + persona.betWrongBias;
-  if(persona.chaos){ p += (Math.random()*2-1)*persona.chaos; }
+  const lv = livelloDi(banca);
+  // ai livelli alti il Banco stima meglio: la sua puntata segue più fedelmente la difficoltà reale
+  let p = current.diff + persona.betWrongBias*(1-lv.astuzia) + (current.diff-0.5)*lv.astuzia;
+  if(persona.chaos){ p += (Math.random()*2-1)*persona.chaos*(1-lv.astuzia); }
   return Math.random() < clamp(p,0.1,0.9);
 }
 function bankSay(list, sub){
@@ -925,13 +994,36 @@ function applyDelta(dMe,dBank,win,title,sub){
 function endGame(){
   $('endMe').textContent=me; $('endBank').textContent=bank;
   const t=$('endTitle'); let msg='';
-  if(me>bank){ t.innerHTML='<span class="b">HAI VINTO!</span>'; msg='Hai letto il Banco meglio di quanto lui abbia letto te.'; }
+  const vittoria = me>bank;
+  // premio: le monete guadagnate rispetto al Banco finiscono nel salvadanaio
+  const premio = Math.max(0, me - bank);
+  const lvPrima = livelloDi(banca);
+  banca += premio; partite++; if(vittoria) vinte++;
+  const lvDopo = livelloDi(banca);
+  const salito = lvDopo.n !== lvPrima.n;
+  salvaProgresso();
+
+  if(vittoria){ t.innerHTML='<span class="b">HAI VINTO!</span>'; msg='Hai letto il Banco meglio di quanto lui abbia letto te.'; }
   else if(me<bank){ t.innerHTML='<span class="c">HA VINTO IL BANCO</span>'; msg='Il Banco ti ha battuto. Rivincita?'; }
   else { t.innerHTML='<span class="c">PARI!</span>'; msg='Perfetto equilibrio.'; }
   $('endMsg').textContent=msg;
   $('endReveal').textContent=persona.reveal;
-  (me>bank ? SFX.endWin : SFX.endLose)();
+
+  let extra = premio>0
+    ? `<div class="premio">+${premio} 🪙 nel salvadanaio</div>`
+    : `<div class="premio zero">Nessuna moneta guadagnata questa volta</div>`;
+  if(salito){
+    extra += `<div class="levelup">${lvDopo.ic} LIVELLO ${lvDopo.n.toUpperCase()}!<br>
+      <span>${lvDopo.msg}</span></div>`;
+  }
+  extra += barraLivello();
+  extra += `<div class="stats">Partite giocate ${partite} · vinte ${vinte}</div>`;
+  $('endProgress').innerHTML = extra;
+
+  (vittoria ? SFX.endWin : SFX.endLose)();
+  if(salito) setTimeout(()=>SFX.levelUp(), 700);
   $('endOverlay').classList.remove('hidden');
+  startCoins();
 }
 /* ---------- AUDIO: suoni brevi generati, nessun file esterno ---------- */
 let audioOn = true, actx = null;
@@ -957,7 +1049,8 @@ const SFX = {
   tap(){ beep(520,0.05,'sine',0.08); },
   start(){ beep(520,0.09,'triangle',0.16); beep(700,0.10,'triangle',0.16,0.08); beep(950,0.16,'triangle',0.14,0.17); },
   endWin(){ [520,660,780,1040].forEach((f,i)=>beep(f,0.16,'triangle',0.18,i*0.13)); },
-  endLose(){ [420,340,270,210].forEach((f,i)=>beep(f,0.20,'sawtooth',0.14,i*0.14)); }
+  endLose(){ [420,340,270,210].forEach((f,i)=>beep(f,0.20,'sawtooth',0.14,i*0.14)); },
+  levelUp(){ [660,880,1100,1320,1760].forEach((f,i)=>beep(f,0.18,'triangle',0.20,i*0.10)); }
 };
 function updateSoundBtn(){ $('soundBtn').textContent = audioOn ? '🔊' : '🔇'; }
 
@@ -1039,16 +1132,19 @@ const STEPS = [
 ];
 let step=0;
 function renderStep(){
-  $('tutoStep').innerHTML=`<div class="tstep">${STEPS[step].html}</div>`;
+  let html=STEPS[step].html;
+  if(step===0 && partite>0) html += barraLivello();   // giocatore di ritorno: mostra il progresso
+  $('tutoStep').innerHTML=`<div class="tstep">${html}</div>`;
   $('dots').innerHTML=STEPS.map((_,i)=>`<span class="${i===step?'on':''}"></span>`).join('');
   $('startBtn').textContent = (step===STEPS.length-1)?'GIOCA':'AVANTI';
   $('skipBtn').style.display = (step===STEPS.length-1)?'none':'block';
 }
 $('startBtn').onclick=()=>{ SFX.tap(); if(step<STEPS.length-1){ step++; renderStep(); } else startGame(); };
 $('skipBtn').onclick=()=>startGame();
-$('againBtn').onclick=()=>{ step=0; startGame(); };
+$('againBtn').onclick=()=>{ step=0; stopCoins(); startGame(); };
 $('soundBtn').onclick=()=>{ audioOn=!audioOn; updateSoundBtn(); if(audioOn) SFX.tap(); };
 updateSoundBtn();
+caricaProgresso();
 renderStep();
 startCoins();
 </script>
