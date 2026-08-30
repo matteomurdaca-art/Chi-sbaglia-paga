@@ -53,7 +53,7 @@ o troppo casuale, e se il tempo a disposizione è quello giusto.
 ## Contatti
 
 Per feedback, segnalazioni o proposte editoriali:
-**chisbagliapaga@gmail.com**
+**info.chisbagliapaga@gmail.com**
 
 ---
 

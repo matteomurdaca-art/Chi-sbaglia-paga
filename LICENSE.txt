@@ -37,9 +37,10 @@ oggetto di privativa.
 
 "Chi Sbaglia Paga" è utilizzato dall'autore come segno distintivo del progetto.
 
-AUTORE
-------
+AUTORE E CONTATTI
+-----------------
 
 Matteo Murdaca
+Per richieste di autorizzazione o informazioni: info.chisbagliapaga@gmail.com
 
-Prototipo in sviluppo — versione 0.4
+Prototipo in sviluppo — versione 0.6
