@@ -133,6 +133,14 @@
   .panel p{opacity:.85; font-size:14px; line-height:1.5; margin-bottom:8px;}
   .panel .rules{background:var(--antracite); border-radius:14px; padding:14px 16px; text-align:left; font-size:13px; line-height:1.6; margin:14px 0; border:1px solid #000;}
   .panel .rules b{color:var(--giallo);}
+  /* aiuto sbloccabile */
+  .help{width:100%; margin:8px 0 4px; padding:11px; border-radius:12px; cursor:pointer;
+    border:1px dashed var(--giallo); background:rgba(245,184,0,.10); color:var(--giallo);
+    font-family:'Fredoka'; font-size:13.5px; font-weight:600;}
+  .help span{opacity:.7; font-weight:400;}
+  .help:active{transform:translateY(1px);}
+  .help.used{border-style:solid; background:rgba(255,255,255,.06); color:var(--panna); cursor:default;}
+
   /* progressione e livelli */
   .lvbox{background:rgba(255,255,255,.05); border:1px solid #000; border-radius:14px;
     padding:12px 14px; margin:12px 0 6px; text-align:left;}
@@ -149,6 +157,8 @@
     font-family:'Anton',sans-serif; font-size:19px; color:var(--giallo); letter-spacing:.5px;
     animation:pop .6s ease;}
   .levelup span{font-family:'Fredoka'; font-size:12.5px; color:var(--panna); opacity:.8; letter-spacing:0; font-weight:400;}
+  .obiettivo{font-size:12px; opacity:.75; margin-top:8px; color:var(--panna);}
+  .obiettivo b{color:var(--giallo);}
   .stats{font-size:11.5px; opacity:.5; margin-top:8px;}
 
   /* schermata di avvio: monete, firma, animazioni */
@@ -235,7 +245,7 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · Sfida al Banco · v1.2<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · Sfida al Banco · v1.4<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
 <div class="overlay" id="startOverlay">
@@ -246,7 +256,7 @@
     <button class="cta" id="startBtn">AVANTI</button>
     <button class="skip" id="skipBtn">salta e gioca</button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span>v1.2 · © 2026 · tutti i diritti riservati</span></div>
+      <span>v1.4 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -665,6 +675,85 @@ const QUESTIONS = [
  {cat:"CIBO", q:"Quanti minuti circa cuoce la pasta al dente in media?", a:"8-10 minuti", detail:"dipende dal formato", wrong:["2-3 minuti", "20 minuti", "30 minuti"], diff:0.25},
  {cat:"SPETTACOLO", q:"Quale film italiano è ambientato in un cinema di paese in Sicilia?", a:"Nuovo Cinema Paradiso", detail:"di Giuseppe Tornatore", wrong:["Il postino", "Malèna", "Baarìa"], diff:0.35}
 ];
+/* categorie speciali: si sbloccano salendo di livello */
+const SPECIALI = [
+ {cat:"CALCIO", q:"Quale squadra ha vinto più Champions League?", a:"Real Madrid", detail:"", wrong:["Milan", "Bayern", "Liverpool"], diff:0.2, special:true},
+ {cat:"CALCIO", q:"Chi ha segnato il gol del 2-0 nella finale Mondiale 2006 per l'Italia?", a:"Grosso", detail:"rigore decisivo", wrong:["Materazzi", "Del Piero", "Totti"], diff:0.55, special:true},
+ {cat:"CALCIO", q:"Quale portiere italiano ha giocato più partite in Serie A?", a:"Buffon", detail:"", wrong:["Zoff", "Toldo", "Peruzzi"], diff:0.3, special:true},
+ {cat:"CALCIO", q:"In quale anno l'Italia vinse il Mondiale in Spagna?", a:"1982", detail:"", wrong:["1978", "1986", "1974"], diff:0.3, special:true},
+ {cat:"CALCIO", q:"Chi era il capocannoniere del Mondiale 1982?", a:"Paolo Rossi", detail:"6 gol", wrong:["Zico", "Rummenigge", "Boniek"], diff:0.35, special:true},
+ {cat:"CALCIO", q:"Quale squadra è soprannominata i Bianconeri?", a:"Juventus", detail:"", wrong:["Inter", "Milan", "Lazio"], diff:0.15, special:true},
+ {cat:"CALCIO", q:"Quale stadio ospita Inter e Milan?", a:"San Siro", detail:"Giuseppe Meazza", wrong:["Olimpico", "Allianz Stadium", "Marassi"], diff:0.1, special:true},
+ {cat:"CALCIO", q:"Chi ha vinto il Pallone d'Oro nel 2006?", a:"Fabio Cannavaro", detail:"", wrong:["Buffon", "Zidane", "Ronaldinho"], diff:0.45, special:true},
+ {cat:"CALCIO", q:"Quale squadra italiana è detta la Vecchia Signora?", a:"Juventus", detail:"", wrong:["Roma", "Napoli", "Torino"], diff:0.25, special:true},
+ {cat:"CALCIO", q:"Chi allenava l'Italia campione del mondo nel 2006?", a:"Marcello Lippi", detail:"", wrong:["Trapattoni", "Prandelli", "Conte"], diff:0.3, special:true},
+ {cat:"CALCIO", q:"Quale calciatore è noto come il Divin Codino?", a:"Roberto Baggio", detail:"", wrong:["Del Piero", "Totti", "Mancini"], diff:0.3, special:true},
+ {cat:"CALCIO", q:"Quanti scudetti aveva vinto il Napoli prima del 2023?", a:"2", detail:"1987 e 1990", wrong:["1", "3", "4"], diff:0.45, special:true},
+ {cat:"CALCIO", q:"Chi ha segnato più gol nella storia della Serie A?", a:"Silvio Piola", detail:"274 gol", wrong:["Totti", "Del Piero", "Nordahl"], diff:0.65, special:true},
+ {cat:"CALCIO", q:"Quale squadra ha vinto lo scudetto 2023?", a:"Napoli", detail:"", wrong:["Inter", "Milan", "Juventus"], diff:0.25, special:true},
+ {cat:"CALCIO", q:"In quale ruolo giocava Franco Baresi?", a:"Difensore", detail:"", wrong:["Attaccante", "Portiere", "Centrocampista"], diff:0.3, special:true},
+ {cat:"CALCIO", q:"Quale città ha il derby della Mole?", a:"Torino", detail:"Juventus-Torino", wrong:["Milano", "Roma", "Genova"], diff:0.35, special:true},
+ {cat:"CALCIO", q:"Chi ha vinto il Mondiale 2022?", a:"Argentina", detail:"", wrong:["Francia", "Brasile", "Croazia"], diff:0.2, special:true},
+ {cat:"CALCIO", q:"Quale squadra italiana ha vinto più Coppe Italia?", a:"Juventus", detail:"", wrong:["Roma", "Inter", "Milan"], diff:0.35, special:true},
+ {cat:"CALCIO", q:"Quanti giocatori può schierare una squadra in panchina in Serie A?", a:"12", detail:"", wrong:["7", "9", "15"], diff:0.6, special:true},
+ {cat:"CALCIO", q:"Chi era il capitano dell'Italia agli Europei 2021?", a:"Giorgio Chiellini", detail:"", wrong:["Bonucci", "Insigne", "Jorginho"], diff:0.3, special:true},
+ {cat:"CALCIO", q:"Quale squadra gioca allo stadio Olimpico oltre alla Roma?", a:"Lazio", detail:"", wrong:["Napoli", "Fiorentina", "Bologna"], diff:0.2, special:true},
+ {cat:"CALCIO", q:"Chi ha segnato il rigore decisivo agli Europei 2021?", a:"Donnarumma parò l'ultimo", detail:"fu una parata", wrong:["Jorginho", "Bernardeschi", "Bonucci"], diff:0.5, special:true},
+ {cat:"CALCIO", q:"Quale allenatore è noto per il catenaccio all'Inter degli anni 60?", a:"Helenio Herrera", detail:"", wrong:["Rocco", "Bearzot", "Sacchi"], diff:0.6, special:true},
+ {cat:"CALCIO", q:"Quanti minuti dura un tempo supplementare?", a:"15", detail:"", wrong:["10", "20", "5"], diff:0.25, special:true},
+ {cat:"CALCIO", q:"Quale squadra ha fatto il triplete nel 2010?", a:"Inter", detail:"", wrong:["Milan", "Juventus", "Barcellona"], diff:0.3, special:true},
+ {cat:"ANNI80-90", q:"Quale console Nintendo uscì nel 1990 in Europa?", a:"Super Nintendo", detail:"SNES", wrong:["Nintendo 64", "Game Boy", "GameCube"], diff:0.45, special:true},
+ {cat:"ANNI80-90", q:"Quale film del 1985 ha una DeLorean che viaggia nel tempo?", a:"Ritorno al futuro", detail:"", wrong:["Blade Runner", "Ghostbusters", "E.T."], diff:0.15, special:true},
+ {cat:"ANNI80-90", q:"Quale gruppo cantava Take On Me?", a:"a-ha", detail:"1985", wrong:["Duran Duran", "Tears for Fears", "Wham!"], diff:0.35, special:true},
+ {cat:"ANNI80-90", q:"Quale supporto musicale ha sostituito le musicassette negli anni 90?", a:"CD", detail:"", wrong:["Vinile", "MiniDisc", "MP3"], diff:0.2, special:true},
+ {cat:"ANNI80-90", q:"Quale telefono cellulare era famoso col gioco Snake?", a:"Nokia 3310", detail:"", wrong:["Motorola StarTAC", "Siemens C45", "Ericsson T28"], diff:0.3, special:true},
+ {cat:"ANNI80-90", q:"Quale cartone aveva i Cavalieri dello Zodiaco?", a:"Saint Seiya", detail:"", wrong:["Ken il guerriero", "Lupin", "Mazinga"], diff:0.4, special:true},
+ {cat:"ANNI80-90", q:"In che anno è caduto il Muro di Berlino?", a:"1989", detail:"", wrong:["1991", "1987", "1990"], diff:0.3, special:true},
+ {cat:"ANNI80-90", q:"Quale gioco portatile Nintendo uscì nel 1989?", a:"Game Boy", detail:"", wrong:["Game Gear", "Lynx", "Virtual Boy"], diff:0.35, special:true},
+ {cat:"ANNI80-90", q:"Quale film del 1993 ha i dinosauri clonati?", a:"Jurassic Park", detail:"", wrong:["Godzilla", "King Kong", "Alien"], diff:0.15, special:true},
+ {cat:"ANNI80-90", q:"Quale band grunge era guidata da Kurt Cobain?", a:"Nirvana", detail:"", wrong:["Pearl Jam", "Soundgarden", "Alice in Chains"], diff:0.2, special:true},
+ {cat:"ANNI80-90", q:"Quale programma TV italiano lanciò il Drive In?", a:"Italia 1", detail:"", wrong:["Rai 1", "Canale 5", "Rete 4"], diff:0.5, special:true},
+ {cat:"ANNI80-90", q:"Quale videogioco arcade ha un idraulico italiano?", a:"Super Mario Bros", detail:"", wrong:["Donkey Kong", "Pac-Man", "Sonic"], diff:0.15, special:true},
+ {cat:"ANNI80-90", q:"Quale gruppo italiano cantava Gianna negli anni 80?", a:"Rino Gaetano", detail:"1978, celebre negli 80", wrong:["Vasco Rossi", "Pooh", "Ricchi e Poveri"], diff:0.45, special:true},
+ {cat:"ANNI80-90", q:"In che anno uscì il primo film di Ritorno al futuro?", a:"1985", detail:"", wrong:["1982", "1988", "1990"], diff:0.35, special:true},
+ {cat:"ANNI80-90", q:"Quale serie TV aveva un'auto parlante di nome KITT?", a:"Supercar", detail:"Knight Rider", wrong:["A-Team", "MacGyver", "Hazzard"], diff:0.3, special:true},
+ {cat:"ANNI80-90", q:"Quale cantante è noto come il Blasco?", a:"Vasco Rossi", detail:"", wrong:["Ligabue", "Zucchero", "Jovanotti"], diff:0.2, special:true},
+ {cat:"ANNI80-90", q:"Quale film Disney del 1994 ha Simba?", a:"Il Re Leone", detail:"", wrong:["Aladdin", "La Sirenetta", "Pocahontas"], diff:0.15, special:true},
+ {cat:"ANNI80-90", q:"Quale formato video domestico vinse su Betamax?", a:"VHS", detail:"", wrong:["Laserdisc", "Video 2000", "DVD"], diff:0.3, special:true},
+ {cat:"ANNI80-90", q:"Quale squadra vinse il Mondiale 1990 in Italia?", a:"Germania Ovest", detail:"", wrong:["Argentina", "Italia", "Brasile"], diff:0.4, special:true},
+ {cat:"ANNI80-90", q:"Quale band inglese cantava Wonderwall?", a:"Oasis", detail:"1995", wrong:["Blur", "Radiohead", "Pulp"], diff:0.3, special:true},
+ {cat:"ANNI80-90", q:"Quale gioco da tavolo con proprietà e alberghi è degli anni 30 ma esplose negli 80?", a:"Monopoly", detail:"", wrong:["Risiko", "Cluedo", "Scarabeo"], diff:0.25, special:true},
+ {cat:"ANNI80-90", q:"Quale ballo spopolò nel 1996 con una canzone spagnola?", a:"Macarena", detail:"", wrong:["Lambada", "Tango", "Salsa"], diff:0.25, special:true},
+ {cat:"ANNI80-90", q:"Quale personaggio TV diceva 'Allegria'?", a:"Mike Bongiorno", detail:"", wrong:["Corrado", "Pippo Baudo", "Raimondo Vianello"], diff:0.3, special:true},
+ {cat:"ANNI80-90", q:"Quale film del 1997 ha Jack e Rose?", a:"Titanic", detail:"", wrong:["Braveheart", "Forrest Gump", "Ghost"], diff:0.1, special:true},
+ {cat:"ANNI80-90", q:"Quale motore di ricerca nacque nel 1998?", a:"Google", detail:"", wrong:["Yahoo", "Altavista", "Lycos"], diff:0.3, special:true},
+ {cat:"RECORD", q:"Qual è l'animale più longevo conosciuto?", a:"Quahog (mollusco)", detail:"oltre 500 anni", wrong:["Tartaruga", "Balena", "Squalo"], diff:0.7, special:true},
+ {cat:"RECORD", q:"Qual è la temperatura più bassa possibile?", a:"-273,15 °C", detail:"zero assoluto", wrong:["-100 °C", "-500 °C", "-1000 °C"], diff:0.4, special:true},
+ {cat:"RECORD", q:"Qual è l'edificio più alto del mondo?", a:"Burj Khalifa", detail:"828 m, Dubai", wrong:["Shanghai Tower", "Torre di Tokyo", "Empire State"], diff:0.25, special:true},
+ {cat:"RECORD", q:"Qual è il luogo più profondo della Terra?", a:"Fossa delle Marianne", detail:"quasi 11.000 m", wrong:["Mar Morto", "Gran Canyon", "Fossa di Giava"], diff:0.3, special:true},
+ {cat:"RECORD", q:"Qual è la sostanza naturale più dura?", a:"Diamante", detail:"", wrong:["Quarzo", "Granito", "Titanio"], diff:0.2, special:true},
+ {cat:"RECORD", q:"Qual è il pianeta più caldo del Sistema Solare?", a:"Venere", detail:"oltre 460 °C", wrong:["Mercurio", "Marte", "Giove"], diff:0.55, special:true},
+ {cat:"RECORD", q:"Qual è l'organismo vivente più grande del pianeta?", a:"Un fungo (Armillaria)", detail:"in Oregon", wrong:["Balenottera azzurra", "Sequoia", "Barriera corallina"], diff:0.7, special:true},
+ {cat:"RECORD", q:"Quanto tempo impiega la luce ad attraversare la Via Lattea?", a:"Circa 100.000 anni", detail:"", wrong:["1 anno", "100 anni", "1 milione di anni"], diff:0.55, special:true},
+ {cat:"RECORD", q:"Qual è il metallo più leggero?", a:"Litio", detail:"", wrong:["Alluminio", "Magnesio", "Titanio"], diff:0.5, special:true},
+ {cat:"RECORD", q:"Qual è il deserto più arido del mondo?", a:"Atacama", detail:"Cile", wrong:["Sahara", "Gobi", "Namib"], diff:0.5, special:true},
+ {cat:"RECORD", q:"Qual è la velocità massima raggiunta da un essere umano?", a:"Circa 39.000 km/h", detail:"equipaggio Apollo 10", wrong:["1.000 km/h", "5.000 km/h", "100.000 km/h"], diff:0.65, special:true},
+ {cat:"RECORD", q:"Qual è il vulcano più grande del Sistema Solare?", a:"Olympus Mons", detail:"su Marte", wrong:["Etna", "Mauna Loa", "Krakatoa"], diff:0.45, special:true},
+ {cat:"RECORD", q:"Quanti neuroni ha circa il cervello umano?", a:"86 miliardi", detail:"", wrong:["1 milione", "1 miliardo", "1000 miliardi"], diff:0.55, special:true},
+ {cat:"RECORD", q:"Qual è l'elemento più denso?", a:"Osmio", detail:"", wrong:["Piombo", "Oro", "Platino"], diff:0.65, special:true},
+ {cat:"RECORD", q:"Qual è la cascata più alta del mondo?", a:"Salto Angel", detail:"Venezuela, 979 m", wrong:["Niagara", "Vittoria", "Iguazú"], diff:0.45, special:true},
+ {cat:"RECORD", q:"Qual è il suono più forte mai registrato?", a:"Eruzione del Krakatoa", detail:"1883", wrong:["Bomba atomica", "Decollo Saturn V", "Terremoto in Cile"], diff:0.6, special:true},
+ {cat:"RECORD", q:"Quanto pesa circa un cucchiaino di stella di neutroni?", a:"Miliardi di tonnellate", detail:"", wrong:["1 kg", "1 tonnellata", "1000 tonnellate"], diff:0.5, special:true},
+ {cat:"RECORD", q:"Qual è il lago più profondo del mondo?", a:"Bajkal", detail:"Siberia, 1.642 m", wrong:["Superiore", "Titicaca", "Tanganica"], diff:0.5, special:true},
+ {cat:"RECORD", q:"Qual è l'animale con più denti?", a:"Lumaca", detail:"migliaia di dentelli", wrong:["Squalo", "Coccodrillo", "Delfino"], diff:0.7, special:true},
+ {cat:"RECORD", q:"Quanto dura il giorno su Venere rispetto al suo anno?", a:"Il giorno è più lungo", detail:"243 giorni contro 225", wrong:["L'anno è più lungo", "Sono uguali", "Il giorno dura un'ora"], diff:0.65, special:true},
+ {cat:"RECORD", q:"Qual è il fiume con la portata d'acqua maggiore?", a:"Rio delle Amazzoni", detail:"", wrong:["Nilo", "Congo", "Yangtze"], diff:0.35, special:true},
+ {cat:"RECORD", q:"Qual è la stella più vicina al Sole?", a:"Proxima Centauri", detail:"4,2 anni luce", wrong:["Sirio", "Alpha Centauri A", "Betelgeuse"], diff:0.45, special:true},
+ {cat:"RECORD", q:"Qual è il numero di Avogadro (ordine di grandezza)?", a:"6 × 10²³", detail:"", wrong:["6 × 10¹⁰", "6 × 10⁵", "6 × 10⁵⁰"], diff:0.65, special:true},
+ {cat:"RECORD", q:"Qual è l'oceano più profondo?", a:"Pacifico", detail:"", wrong:["Atlantico", "Indiano", "Artico"], diff:0.35, special:true},
+ {cat:"RECORD", q:"Quanti anni ha circa la Terra?", a:"4,5 miliardi", detail:"", wrong:["1 miliardo", "500 milioni", "10 miliardi"], diff:0.35, special:true}
+];
+
 
 /* ---- personalità del Banco ---- */
 /* frasi comuni a tutti i caratteri: non devono rivelare la personalità */
@@ -692,10 +781,24 @@ const PERSONAS = {
   },
   lunatico:{
     nome:"lunatico", face:"🎩", reveal:"Il Banco era LUNATICO: imprevedibile, un turno geniale e uno disastroso.",
-    skill:0.0, fumble:0.18, betWrongBias:0.0, chaos:0.28,  // aggiunge rumore forte
+    skill:0.0, fumble:0.18, betWrongBias:0.0, chaos:0.28,
+    saysAnswering:SAYS_ANSWER, saysBetting:SAYS_BET
+  },
+  specialista:{
+    nome:"specialista", face:"🎩",
+    reveal:"Il Banco era SPECIALISTA: fortissimo in alcune categorie, disastroso in altre.",
+    skill:0.0, fumble:0.08, betWrongBias:0.0, materie:true,
+    saysAnswering:SAYS_ANSWER, saysBetting:SAYS_BET
+  },
+  opportunista:{
+    nome:"opportunista", face:"🎩",
+    reveal:"Il Banco era OPPORTUNISTA: ti puntava contro solo quando eri in vantaggio.",
+    skill:0.05, fumble:0.10, betWrongBias:0.0, opport:true,
     saysAnswering:SAYS_ANSWER, saysBetting:SAYS_BET
   }
 };
+/* lo specialista sorteggia a inizio partita le categorie in cui è forte o debole */
+let forti=[], deboli=[];
 const CONFIDENT=["L'ho già sentita questa.","Tranquilli, ci sono.","Questa è nelle mie corde."];
 const UNSURE=["Uhm, non vorrei sbagliare…","Questa mi frega, forse.","Categoria ostica per me."];
 
@@ -703,9 +806,21 @@ const TOT=10, START=15, TIME=15;
 let deck=[], turn=0, me=START, bank=START, current=null, role=null, persona=null, stake=2;
 let timerId=null, timeLeft=0, lastTick=0;
 let bankHits=0, bankMiss=0, bankBetsW=0, bankBetsG=0;   // storico per indizi sul carattere
+let aiutiRimasti=0, aiutoUsatoOra=false;
 const seen = new Set();   // domande già uscite: evita ripetizioni tra partite
 
 /* ---------- PROGRESSIONE: monete accumulate, livelli, salvataggio ---------- */
+const SBLOCCHI = {
+  "CALCIO":    {soglia:60,  nome:"Calcio italiano", ic:"⚽"},
+  "ANNI80-90": {soglia:140, nome:"Anni '80 e '90",  ic:"📼"},
+  "RECORD":    {soglia:240, nome:"Record estremi",  ic:"🏆"}
+};
+const AIUTO_SOGLIA = 90;   // da qui in poi puoi sbirciare la puntata del Banco
+function categorieSbloccate(){
+  return Object.keys(SBLOCCHI).filter(k=>banca>=SBLOCCHI[k].soglia);
+}
+function aiutiDisponibili(){ return banca>=AIUTO_SOGLIA ? 1 : 0; }
+
 const LIVELLI = [
   {n:"Novellino",        soglia:0,    ic:"🎫", skill:0.00, astuzia:0.00,
    msg:"Il Banco ti studia appena."},
@@ -782,13 +897,20 @@ function stopTimer(){ if(timerId){ clearInterval(timerId); timerId=null; } $('ti
 function startGame(){
   stopCoins(); SFX.start();
   // pesca 10 domande evitando quelle già viste nelle partite precedenti
-  let pool = QUESTIONS.filter(x=>!seen.has(x.q));
-  if(pool.length < TOT){ seen.clear(); pool = QUESTIONS.slice(); }  // esaurite: si riparte
+  const sbloccate = categorieSbloccate();
+  const disponibili = QUESTIONS.concat(SPECIALI.filter(x=>sbloccate.includes(x.cat)));
+  let pool = disponibili.filter(x=>!seen.has(x.q));
+  if(pool.length < TOT){ seen.clear(); pool = disponibili.slice(); }  // esaurite: si riparte
   deck = shuffle(pool).slice(0,TOT);
   deck.forEach(x=>seen.add(x.q));
   turn=0; me=START; bank=START;
   bankHits=0; bankMiss=0; bankBetsW=0; bankBetsG=0;
+  aiutiRimasti=aiutiDisponibili();
   persona=PERSONAS[pick(Object.keys(PERSONAS))];   // carattere nascosto
+  if(persona.materie){
+    const cats=shuffle([...new Set(deck.map(x=>x.cat))]);
+    forti=cats.slice(0,2); deboli=cats.slice(2,4);
+  } else { forti=[]; deboli=[]; }
   $('startOverlay').classList.add('hidden'); $('endOverlay').classList.add('hidden');
   $('turnTot').textContent=TOT; updateScores(true); nextTurn();
 }
@@ -800,7 +922,12 @@ function updateScores(noflash){
 /* il Banco risponde bene? combina difficoltà, skill, papere e caos del carattere */
 function bankAnswersCorrectly(){
   const lv = livelloDi(banca);
-  let pCorrect = (1 - current.diff) + persona.skill + lv.skill;
+  let bonusMateria = 0;
+  if(persona.materie){
+    if(forti.includes(current.cat)) bonusMateria = 0.35;
+    else if(deboli.includes(current.cat)) bonusMateria = -0.35;
+  }
+  let pCorrect = (1 - current.diff) + persona.skill + lv.skill + bonusMateria;
   if(persona.chaos){ pCorrect += (Math.random()*2-1)*persona.chaos; }   // lunatico: forte rumore
   pCorrect = clamp(pCorrect, 0.05, 0.95);
   let correct = Math.random() < pCorrect;
@@ -814,6 +941,8 @@ function bankBetsWrongOnYou(){
   const lv = livelloDi(banca);
   // ai livelli alti il Banco stima meglio: la sua puntata segue più fedelmente la difficoltà reale
   let p = current.diff + persona.betWrongBias*(1-lv.astuzia) + (current.diff-0.5)*lv.astuzia;
+  // l'opportunista ti punta contro quando sei avanti, ti asseconda quando sei dietro
+  if(persona.opport) p += (me > bank ? 0.28 : -0.22);
   if(persona.chaos){ p += (Math.random()*2-1)*persona.chaos*(1-lv.astuzia); }
   return Math.random() < clamp(p,0.1,0.9);
 }
@@ -865,6 +994,22 @@ function renderAnswer(){
     bt.onclick=()=>{ SFX.tap(); stake=v; [...amt.children].forEach(c=>c.classList.toggle('on', +c.textContent===v)); };
     amt.appendChild(bt); });
   st.appendChild(amt); wrap.appendChild(st);
+  // AIUTO: sbircia la puntata coperta del Banco
+  aiutoUsatoOra=false;
+  if(aiutiRimasti>0){
+    const help=document.createElement('button'); help.className='help';
+    help.innerHTML=`🔍 Sbircia la puntata del Banco <span>(${aiutiRimasti})</span>`;
+    help.onclick=()=>{
+      if(aiutoUsatoOra) return;
+      aiutoUsatoOra=true; aiutiRimasti--; SFX.tap();
+      help.className='help used';
+      help.innerHTML = bankWrong
+        ? `🔍 Il Banco ha puntato: <b style="color:#ff8a82">SBAGLIATO ✗</b>`
+        : `🔍 Il Banco ha puntato: <b style="color:#7ee08f">GIUSTO ✓</b>`;
+      help.disabled=true;
+    };
+    wrap.appendChild(help);
+  }
   const opts=shuffle([current.a, ...current.wrong]);
   const box=document.createElement('div'); box.className='options';
   opts.forEach(o=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=o;
@@ -1016,7 +1161,22 @@ function endGame(){
     extra += `<div class="levelup">${lvDopo.ic} LIVELLO ${lvDopo.n.toUpperCase()}!<br>
       <span>${lvDopo.msg}</span></div>`;
   }
+  // annuncia sblocchi appena raggiunti
+  Object.keys(SBLOCCHI).forEach(k=>{
+    const s=SBLOCCHI[k];
+    if(banca>=s.soglia && (banca-premio)<s.soglia)
+      extra += `<div class="levelup">${s.ic} NUOVA CATEGORIA: ${s.nome.toUpperCase()}<br>
+        <span>Da ora può uscire nelle tue partite.</span></div>`;
+  });
+  if(banca>=AIUTO_SOGLIA && (banca-premio)<AIUTO_SOGLIA)
+    extra += `<div class="levelup">🔍 AIUTO SBLOCCATO<br>
+      <span>Una volta a partita puoi sbirciare la puntata del Banco.</span></div>`;
   extra += barraLivello();
+  // prossimo obiettivo
+  const pross = Object.keys(SBLOCCHI).map(k=>SBLOCCHI[k]).filter(s=>banca<s.soglia)
+    .concat(banca<AIUTO_SOGLIA ? [{soglia:AIUTO_SOGLIA, nome:"Aiuto: sbircia la puntata", ic:"🔍"}] : [])
+    .sort((a,b)=>a.soglia-b.soglia)[0];
+  if(pross) extra += `<div class="obiettivo">${pross.ic} ${pross.soglia-banca} monete per sbloccare <b>${pross.nome}</b></div>`;
   extra += `<div class="stats">Partite giocate ${partite} · vinte ${vinte}</div>`;
   $('endProgress').innerHTML = extra;
 
@@ -1113,21 +1273,32 @@ const STEPS = [
    </div>`},
 
  {html:`<div class="big-ic">🕵️</div><h2>IL BANCO HA UN CARATTERE</h2>
-   <p>Ogni partita ne pesca uno <b style="color:var(--giallo)">a caso e nascosto</b>. Cambia come risponde e come scommette — ma <b>non si vede</b>: puoi capirlo solo osservando cosa fa, turno dopo turno.</p>
+   <p>Ogni partita ne pesca uno <b style="color:var(--giallo)">a caso e nascosto</b> tra cinque. Cambia come risponde e come scommette — ma <b>non si vede</b>: puoi capirlo solo osservando cosa fa.</p>
    <div class="box">
      <div class="persona"><span class="f">•</span><span><b>Prudente</b> — risponde bene, ma su di te punta con cautela.</span></div>
      <div class="persona"><span class="f">•</span><span><b>Spavaldo</b> — sbaglia più di quanto sembri.</span></div>
      <div class="persona"><span class="f">•</span><span><b>Lunatico</b> — un turno geniale e uno disastroso.</span></div>
-     <div style="opacity:.7;margin-top:8px">Aspetto e frasi sono <b>sempre uguali</b> per tutti: l'unico indizio è l'<b>identikit</b> in alto, che registra risposte e puntate. Scoprirai chi era solo a fine partita.</div>
+     <div class="persona"><span class="f">•</span><span><b>Specialista</b> — fortissimo in certe categorie, pessimo in altre: guarda di che materia è la domanda.</span></div>
+     <div class="persona"><span class="f">•</span><span><b>Opportunista</b> — ti punta contro quando sei in vantaggio: tieni d'occhio il punteggio.</span></div>
+     <div style="opacity:.7;margin-top:8px">Aspetto e frasi sono <b>sempre uguali</b> per tutti: l'unico indizio è l'<b>identikit</b> in alto. Scoprirai chi era solo a fine partita.</div>
    </div>`},
 
  {html:`<div class="big-ic">⏱️</div><h2>HAI 15 SECONDI</h2>
    <p>Ogni turno è a tempo. La barra diventa <b style="color:var(--rosso)">rossa</b> negli ultimi secondi.</p>
    <div class="box">
      Se il tempo scade:<br>
-     <div class="row"><span class="k r">✗</span><span>da Rispondente vale come <b>errore</b> (−2)</span></div>
+     <div class="row"><span class="k r">✗</span><span>da Rispondente vale come <b>errore</b> (perdi la posta)</span></div>
      <div class="row"><span class="k r">✗</span><span>da Puntatore <b>perdi la posta</b> scelta</span></div>
      <div style="opacity:.7;margin-top:8px">Decidi di pancia: è parte del gioco.</div>
+   </div>`},
+
+ {html:`<div class="big-ic">🏆</div><h2>SALI DI LIVELLO</h2>
+   <p>Le monete che vinci a fine partita finiscono nel <b style="color:var(--giallo)">salvadanaio</b> e restano salvate. Più ne accumuli, più sali.</p>
+   <div class="box">
+     <div class="row"><span class="k o">🎩</span><span>Salendo di livello il <b>Banco diventa più astuto</b>: papera meno e ti legge meglio.</span></div>
+     <div class="row"><span class="k g">⚽</span><span>A <b>60 monete</b> sblocchi la categoria <b>Calcio italiano</b>,<br>a 140 <b>Anni '80 e '90</b>, a 240 <b>Record estremi</b>.</span></div>
+     <div class="row"><span class="k o">🔍</span><span>A <b>90 monete</b> sblocchi l'aiuto: una volta a partita puoi <b>sbirciare la puntata del Banco</b> prima di rispondere.</span></div>
+     <div style="opacity:.7;margin-top:8px">Da Novellino a <b>Squalo</b>: cinque livelli da scalare.</div>
    </div>`}
 ];
 let step=0;
