@@ -7,6 +7,12 @@ Non basta sapere le risposte: bisogna prevedere **quando gli altri sbaglieranno*
 
 ---
 
+## Due modalità
+
+- **🎩 Sfida al Banco** — da solo contro il computer, 10 turni, con progressione a livelli.
+- **👥 Tra amici** — 2-6 giocatori con un solo telefono che gira al tavolo: le puntate si
+  inseriscono di nascosto e il bluff torna quello vero, guardandosi in faccia.
+
 ## Come si gioca (modalità Sfida al Banco)
 
 Partita da 10 turni, si parte con 15 monete. Il ruolo si alterna a ogni turno:
@@ -44,7 +50,7 @@ browser. Non richiede installazione né connessione dopo il primo caricamento.
 
 ## Stato del progetto
 
-Prototipo v1.2, in fase di playtest. 475 domande su 13 categorie, 5 caratteri del Banco, progressione a livelli con sblocchi.
+Prototipo v1.2, in fase di playtest. 475 domande su 13 categorie, 5 caratteri del Banco, progressione a livelli e modalità multigiocatore.
 Esiste anche una versione fisica del gioco (carte, gettoni, regolamento) in Print & Play.
 
 Feedback benvenuti: cosa funziona, cosa annoia, se il Banco è troppo prevedibile

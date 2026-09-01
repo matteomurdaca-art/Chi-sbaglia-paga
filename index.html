@@ -133,6 +133,50 @@
   .panel p{opacity:.85; font-size:14px; line-height:1.5; margin-bottom:8px;}
   .panel .rules{background:var(--antracite); border-radius:14px; padding:14px 16px; text-align:left; font-size:13px; line-height:1.6; margin:14px 0; border:1px solid #000;}
   .panel .rules b{color:var(--giallo);}
+  /* conto alla rovescia di preparazione */
+  .cdown{position:fixed; inset:0; z-index:40; background:#08080a;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;}
+  .cdown .cdnum{font-family:'Anton',sans-serif; font-size:110px; color:var(--giallo);
+    -webkit-text-stroke:3px #000; animation:cdpop .5s ease;}
+  .cdown .cdlab{font-family:'Fredoka'; font-size:15px; opacity:.7;}
+  @keyframes cdpop{0%{transform:scale(.4);opacity:0;}55%{transform:scale(1.15);opacity:1;}100%{transform:scale(1);}}
+
+  /* selezione modalità e party */
+  #coinsCanvas2{position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none;}
+  .modebtn{width:100%; display:flex; align-items:center; gap:14px; text-align:left;
+    background:linear-gradient(180deg,#3ec85a,#22a043); border:none; border-radius:16px;
+    padding:14px 16px; margin:10px 0; cursor:pointer; color:#fff; box-shadow:0 5px 0 #17742f;
+    font-family:'Fredoka'; transition:transform .08s;}
+  .modebtn:active{transform:translateY(3px); box-shadow:0 2px 0 #17742f;}
+  .modebtn.alt{background:linear-gradient(180deg,#F5B800,#D99F00); box-shadow:0 5px 0 #8a6d00; color:var(--nero);}
+  .modebtn.alt:active{box-shadow:0 2px 0 #8a6d00;}
+  .modebtn .mi{font-size:30px; flex:none;}
+  .modebtn .mt{display:flex; flex-direction:column; line-height:1.25;}
+  .modebtn .mt b{font-family:'Anton',sans-serif; font-size:19px; letter-spacing:.5px;}
+  .modebtn .mt span{font-size:12px; opacity:.85;}
+  .ph{font-family:'Anton',sans-serif; font-size:26px; color:var(--giallo); margin-bottom:8px; letter-spacing:.5px;}
+  .prow{display:flex; align-items:center; gap:8px; margin:7px 0;}
+  .prow input{flex:1; background:var(--antracite); border:1px solid #000; border-radius:10px;
+    padding:11px 12px; color:var(--panna); font-family:'Fredoka'; font-size:15px;}
+  .prow input:focus{outline:2px solid var(--giallo);}
+  .prow .del{background:none;border:none;color:#ff8a82;font-size:20px;cursor:pointer;padding:0 6px;}
+  .addp{width:100%; margin-top:8px; padding:11px; border-radius:12px; cursor:pointer;
+    border:1px dashed var(--giallo); background:rgba(245,184,0,.10); color:var(--giallo);
+    font-family:'Fredoka'; font-size:14px; font-weight:600;}
+  .rank{text-align:left; margin:14px 0;}
+  .rankrow{display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.05);
+    border:1px solid #000; border-radius:12px; padding:10px 12px; margin:6px 0;}
+  .rankrow .pos{font-family:'Anton',sans-serif; font-size:19px; width:30px; color:var(--giallo);}
+  .rankrow .nm{flex:1; font-weight:600;}
+  .rankrow .sc{font-family:'Anton',sans-serif; font-size:19px; color:var(--oro);}
+  .rankrow.first{background:rgba(245,184,0,.16); border-color:var(--giallo);}
+  .turnwho{text-align:center; font-family:'Anton',sans-serif; font-size:15px; color:var(--giallo);
+    letter-spacing:.5px; margin-bottom:6px;}
+  .miniscore{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:8px;}
+  .miniscore span{background:var(--antracite); border:1px solid #000; border-radius:8px;
+    padding:3px 8px; font-size:11.5px;}
+  .miniscore span.act{background:var(--giallo); color:var(--nero); font-weight:600;}
+
   /* aiuto sbloccabile */
   .help{width:100%; margin:8px 0 4px; padding:11px; border-radius:12px; cursor:pointer;
     border:1px dashed var(--giallo); background:rgba(245,184,0,.10); color:var(--giallo);
@@ -245,10 +289,28 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · Sfida al Banco · v1.4<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · v1.6<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
-<div class="overlay" id="startOverlay">
+<div class="overlay" id="modeOverlay">
+  <canvas id="coinsCanvas2"></canvas>
+  <div class="panel">
+    <div class="biglogo"><span class="a">CHI</span><br><span class="b">SBAGLIA</span><br><span class="c">PAGA</span></div>
+    <div class="tagline">Scommetti sull'errore degli altri!</div>
+    <button class="modebtn" id="modeSolo">
+      <span class="mi">🎩</span>
+      <span class="mt"><b>SFIDA AL BANCO</b><span>Da solo contro il computer · 10 turni</span></span>
+    </button>
+    <button class="modebtn alt" id="modeParty">
+      <span class="mi">👥</span>
+      <span class="mt"><b>TRA AMICI</b><span>2-6 giocatori, un solo telefono che gira</span></span>
+    </button>
+    <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
+      <span id="signVer">v1.6 · © 2026 · tutti i diritti riservati</span></div>
+  </div>
+</div>
+
+<div class="overlay hidden" id="startOverlay">
   <canvas id="coinsCanvas"></canvas>
   <div class="panel">
     <div id="tutoStep"></div>
@@ -256,7 +318,47 @@
     <button class="cta" id="startBtn">AVANTI</button>
     <button class="skip" id="skipBtn">salta e gioca</button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span>v1.4 · © 2026 · tutti i diritti riservati</span></div>
+      <span>v1.6 · © 2026 · tutti i diritti riservati</span></div>
+  </div>
+</div>
+
+
+<!-- SETUP PARTY -->
+<div class="overlay hidden" id="partySetup">
+  <div class="panel">
+    <h2 class="ph">CHI GIOCA?</h2>
+    <p style="font-size:13px;opacity:.8">Inserisci i nomi. Servono almeno 2 giocatori.</p>
+    <div id="playerList"></div>
+    <button class="addp" id="addPlayer">+ Aggiungi giocatore</button>
+    <div class="stake" style="margin-top:14px">
+      <span class="lbl">Turni:</span>
+      <div class="amt" id="roundsSel">
+        <button data-r="6">6</button><button data-r="12" class="on">12</button><button data-r="18">18</button>
+      </div>
+    </div>
+    <button class="cta" id="partyStart" style="margin-top:14px">INIZIA</button>
+    <button class="skip" id="partyBack">torna indietro</button>
+  </div>
+</div>
+
+<!-- PASSAGGIO TELEFONO -->
+<div class="overlay hidden" id="passOverlay">
+  <div class="panel">
+    <div class="big-ic" style="font-size:52px">📱</div>
+    <h2 class="ph" id="passTitle">PASSA IL TELEFONO</h2>
+    <p id="passMsg" style="font-size:15px"></p>
+    <div class="box" id="passBox" style="text-align:left;font-size:13px"></div>
+    <button class="cta" id="passBtn">SONO PRONTO</button>
+  </div>
+</div>
+
+<!-- CLASSIFICA FINALE PARTY -->
+<div class="overlay hidden" id="partyEnd">
+  <div class="panel">
+    <div class="biglogo"><span class="b" id="partyWinner">FINE</span></div>
+    <div id="partyRank"></div>
+    <button class="cta" id="partyAgain">RIGIOCA</button>
+    <button class="skip" id="partyMenu">torna al menu</button>
   </div>
 </div>
 
@@ -269,6 +371,7 @@
     <p id="endReveal" style="opacity:.7;font-size:13px"></p>
     <div id="endProgress"></div>
     <button class="cta" id="againBtn">RIGIOCA</button>
+    <button class="skip" id="soloMenu">torna al menu</button>
   </div>
 </div>
 
@@ -1185,6 +1288,230 @@ function endGame(){
   $('endOverlay').classList.remove('hidden');
   startCoins();
 }
+
+/* ============================================================
+   MODALITÀ TRA AMICI (pass-and-play): un solo telefono che gira
+   ============================================================ */
+let PG=[], pgScores=[], pgTurn=0, pgRounds=12, pgDeck=[], pgCur=null;
+let pgResp=0, pgBets={}, pgBetIdx=0, pgOrder=[], pgStake={};
+
+function pgShow(id){ ['modeOverlay','startOverlay','partySetup','passOverlay','partyEnd','endOverlay']
+  .forEach(x=>$(x).classList.add('hidden')); if(id) $(id).classList.remove('hidden'); }
+
+function renderPlayers(){
+  const box=$('playerList'); box.innerHTML='';
+  PG.forEach((nome,i)=>{
+    const r=document.createElement('div'); r.className='prow';
+    const inp=document.createElement('input');
+    inp.value=nome; inp.placeholder='Giocatore '+(i+1); inp.maxLength=14;
+    inp.oninput=()=>{ PG[i]=inp.value; };
+    r.appendChild(inp);
+    if(PG.length>2){
+      const d=document.createElement('button'); d.className='del'; d.textContent='×';
+      d.onclick=()=>{ PG.splice(i,1); renderPlayers(); };
+      r.appendChild(d);
+    }
+    box.appendChild(r);
+  });
+  $('addPlayer').style.display = PG.length>=6 ? 'none' : 'block';
+}
+
+function partySetup(){
+  if(PG.length===0) PG=['',''];
+  pgShow('partySetup'); renderPlayers();
+}
+
+function partyStart(){
+  const nomi=PG.map((n,i)=> (n||'').trim() || 'Giocatore '+(i+1));
+  if(nomi.length<2) return;
+  PG=nomi; pgScores=PG.map(()=>15); pgTurn=0;
+  const pool=QUESTIONS.concat(SPECIALI.filter(x=>categorieSbloccate().includes(x.cat)));
+  pgDeck=shuffle(pool).slice(0,pgRounds);
+  SFX.start(); stopCoins(); pgNextTurn();
+}
+
+function pgNextTurn(){
+  if(pgTurn>=pgRounds) return pgEnd();
+  pgCur=pgDeck[pgTurn];
+  pgResp=pgTurn % PG.length;                 // il ruolo di Rispondente ruota
+  pgOrder=PG.map((_,i)=>i).filter(i=>i!==pgResp);
+  pgBets={}; pgStake={}; pgBetIdx=0;
+  pgAskBet();
+}
+
+/* ogni Puntatore inserisce di nascosto la sua scommessa */
+function pgAskBet(){
+  if(pgBetIdx>=pgOrder.length) return pgAskAnswer();
+  const p=pgOrder[pgBetIdx];
+  pgShow('passOverlay');
+  $('passTitle').textContent='PASSA A '+PG[p].toUpperCase();
+  $('passMsg').innerHTML=`Solo <b>${PG[p]}</b> deve guardare lo schermo.`;
+  $('passBox').innerHTML=`Devi scommettere sulla risposta di <b>${PG[pgResp]}</b>.<br>
+    Categoria: <b>${pgCur.cat}</b>`;
+  $('passBtn').textContent='SONO '+PG[p].toUpperCase();
+  $('passBtn').onclick=()=>pgBetScreen(p);
+}
+
+function pgBetScreen(p){
+  pgShow(null);
+  $('roleLabel').textContent='🎯 Punta '+PG[p];
+  $('turnNo').textContent=pgTurn+1; $('turnTot').textContent=pgRounds;
+  pgHeader(p);
+  $('prompt').innerHTML=`<b>${PG[pgResp]}</b> deve rispondere. Indovinerà?`;
+  $('bankSayBox').innerHTML=''; $('dossier').innerHTML='';
+  const card=$('card'), rib=$('cardRibbon');
+  card.className='card q'; rib.className='ribbon'; rib.style.background='';
+  rib.textContent='CHI SBAGLIA PAGA';
+  $('cardCat').textContent=pgCur.cat; $('cardText').textContent=pgCur.q;
+
+  let st=2;
+  const wrap=document.createElement('div');
+  const sd=document.createElement('div'); sd.className='stake';
+  sd.innerHTML='<span class="lbl">Punta:</span>';
+  const amt=document.createElement('div'); amt.className='amt';
+  [1,2,3].forEach(v=>{ const b=document.createElement('button'); b.textContent=v; if(v===st)b.classList.add('on');
+    b.onclick=()=>{ SFX.tap(); st=v; [...amt.children].forEach(c=>c.classList.toggle('on',+c.textContent===v)); };
+    amt.appendChild(b); });
+  sd.appendChild(amt); wrap.appendChild(sd);
+  const box=document.createElement('div'); box.className='bets';
+  const g=document.createElement('button'); g.className='bet giusto'; g.innerHTML='<span class="ic">✓</span> GIUSTO';
+  const s=document.createElement('button'); s.className='bet sbagliato'; s.innerHTML='<span class="ic">✗</span> SBAGLIATO';
+  g.onclick=()=>{ SFX.tap(); pgBets[p]=true;  pgStake[p]=st; pgBetIdx++; pgAskBet(); };
+  s.onclick=()=>{ SFX.tap(); pgBets[p]=false; pgStake[p]=st; pgBetIdx++; pgAskBet(); };
+  box.append(g,s); wrap.appendChild(box);
+  $('timerBox').innerHTML=''; $('controls').innerHTML=''; $('controls').appendChild(wrap);
+  $('hint').textContent='Scegli di nascosto, poi passa il telefono.';
+}
+
+/* tocca al Rispondente */
+function pgAskAnswer(){
+  pgShow('passOverlay');
+  $('passTitle').textContent='PASSA A '+PG[pgResp].toUpperCase();
+  $('passMsg').innerHTML=`Tutti hanno puntato. Tocca a <b>${PG[pgResp]}</b> rispondere.`;
+  $('passBox').innerHTML=`Hai <b>15 secondi</b>. Scegli quanto ci credi, poi rispondi.<br>
+    Guadagni solo se qualcuno aveva scommesso che sbagliavi!`;
+  $('passBtn').textContent='SONO '+PG[pgResp].toUpperCase();
+  $('passBtn').onclick=()=>pgAnswerScreen();
+}
+
+function pgHeader(active){
+  const ms=PG.map((n,i)=>`<span class="${i===active?'act':''}">${n} ${pgScores[i]}</span>`).join('');
+  $('dossier').innerHTML=`<div class="miniscore">${ms}</div>`;
+}
+
+function pgAnswerScreen(){
+  pgShow(null);
+  $('roleLabel').textContent='🎤 Risponde '+PG[pgResp];
+  pgHeader(pgResp);
+  $('prompt').innerHTML=`<b>${PG[pgResp]}</b>, tocca a te. Quanto ci credi?`;
+  const card=$('card'), rib=$('cardRibbon');
+  card.className='card q'; rib.className='ribbon'; rib.style.background='';
+  rib.textContent='CHI SBAGLIA PAGA';
+  $('cardCat').textContent=pgCur.cat; $('cardText').textContent=pgCur.q;
+
+  let st=2;
+  const wrap=document.createElement('div');
+  const sd=document.createElement('div'); sd.className='stake';
+  sd.innerHTML='<span class="lbl">Ci credo:</span>';
+  const amt=document.createElement('div'); amt.className='amt';
+  [1,2,3].forEach(v=>{ const b=document.createElement('button'); b.textContent=v; if(v===st)b.classList.add('on');
+    b.onclick=()=>{ SFX.tap(); st=v; [...amt.children].forEach(c=>c.classList.toggle('on',+c.textContent===v)); };
+    amt.appendChild(b); });
+  sd.appendChild(amt); wrap.appendChild(sd);
+  const opts=shuffle([pgCur.a,...pgCur.wrong]);
+  const box=document.createElement('div'); box.className='options';
+  opts.forEach(o=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+    b.onclick=()=>{ SFX.tap(); pgResolve(o===pgCur.a, st, b, box); }; box.appendChild(b); });
+  wrap.appendChild(box);
+  $('controls').innerHTML=''; $('controls').appendChild(wrap);
+  $('hint').textContent='Scegli la posta, poi rispondi.';
+  // conto alla rovescia di preparazione: il tempo parte solo quando sei pronto
+  countdown(3, ()=>{
+    startTimer(()=>{
+      [...box.children].forEach(b=>{ b.disabled=true; if(b.textContent===pgCur.a) b.classList.add('correct'); });
+      SFX.timeout(); pgResolve(false, st, null, box, true);
+    });
+  });
+}
+
+/* conto alla rovescia a schermo prima di far partire il tempo */
+let cdTimer=null;
+function countdown(n, done){
+  if(cdTimer){ clearInterval(cdTimer); cdTimer=null; }
+  const ov=document.createElement('div'); ov.className='cdown'; ov.id='cdown';
+  ov.innerHTML=`<div class="cdnum">${n}</div><div class="cdlab">preparati…</div>`;
+  document.body.appendChild(ov);
+  let k=n; SFX.tick();
+  cdTimer=setInterval(()=>{
+    k--;
+    if(k>0){ ov.querySelector('.cdnum').textContent=k; SFX.tick();
+      ov.querySelector('.cdnum').style.animation='none'; void ov.offsetWidth;
+      ov.querySelector('.cdnum').style.animation='cdpop .5s ease'; }
+    else{
+      clearInterval(cdTimer); cdTimer=null;
+      ov.querySelector('.cdnum').textContent='VIA!';
+      ov.querySelector('.cdlab').textContent='';
+      SFX.tap();
+      setTimeout(()=>{ ov.remove(); done(); }, 450);
+    }
+  }, 800);
+}
+
+function pgResolve(correct, st, btn, box, timeout){
+  stopTimer();
+  [...box.children].forEach(b=>b.disabled=true);
+  if(btn) btn.classList.add(correct?'correct':'wrong');
+  // punteggi
+  let ingannati=0, righe=[];
+  pgOrder.forEach(p=>{
+    const puntoGiusto=pgBets[p], s=pgStake[p]||2;
+    const ok = (puntoGiusto===correct);
+    pgScores[p] += ok ? s : -s;
+    if(!puntoGiusto) ingannati++;   // aveva puntato SBAGLIATO
+    righe.push(`<div class="rankrow"><span class="nm">${PG[p]} <span style="opacity:.6;font-size:12px">
+      (${puntoGiusto?'GIUSTO ✓':'SBAGLIATO ✗'})</span></span>
+      <span class="sc" style="color:${ok?'#7ee08f':'#ff8a82'}">${ok?'+':''}${ok?s:-s}</span></div>`);
+  });
+  let dResp = correct ? ingannati : -st;
+  pgScores[pgResp] += dResp;
+
+  // rivela
+  const card=$('card'), rib=$('cardRibbon'); card.className='card a';
+  if(correct){ rib.className='ribbon correct'; rib.style.background=''; rib.textContent=PG[pgResp].toUpperCase()+' HA RISPOSTO GIUSTO ✓'; }
+  else { rib.className='ribbon'; rib.style.background='var(--rosso)'; rib.textContent=(timeout?'TEMPO SCADUTO ✗':PG[pgResp].toUpperCase()+' HA SBAGLIATO ✗'); }
+  $('cardCat').textContent=pgCur.cat;
+  $('cardText').innerHTML=col([['La risposta giusta era',.6,13,400,null],[pgCur.a,1,24,600,'var(--giallo)']],pgCur.detail);
+
+  const res=document.createElement('div'); res.className='result '+(correct?'win':'lose');
+  const segno = dResp>0?'+':'';
+  res.innerHTML=`<b>${PG[pgResp]}</b> ${correct?'indovina':'sbaglia'}
+    <span class="delta">${segno}${dResp}</span>
+    <div style="font-size:12px;opacity:.75;font-weight:400">${correct
+      ? (ingannati>0?`ha ingannato ${ingannati} giocator${ingannati>1?'i':'e'}!`:'ma nessuno ci era cascato')
+      : `perde la posta di ${st}`}</div>`;
+  const dett=document.createElement('div'); dett.className='rank'; dett.innerHTML=righe.join('');
+  $('controls').innerHTML=''; $('controls').appendChild(res); $('controls').appendChild(dett);
+  (correct?SFX.win:SFX.lose)();
+  pgHeader(pgResp);
+
+  const btn2=document.createElement('button'); btn2.className='cta';
+  btn2.textContent=(pgTurn+1>=pgRounds)?'CLASSIFICA FINALE':'TURNO SUCCESSIVO';
+  btn2.onclick=()=>{ pgTurn++; pgNextTurn(); };
+  $('controls').appendChild(btn2);
+}
+
+function pgEnd(){
+  const idx=PG.map((n,i)=>i).sort((a,b)=>pgScores[b]-pgScores[a]);
+  const max=pgScores[idx[0]];
+  const vincitori=idx.filter(i=>pgScores[i]===max);
+  $('partyWinner').textContent = vincitori.length>1 ? 'PARI!' : 'VINCE '+PG[vincitori[0]].toUpperCase();
+  $('partyRank').innerHTML='<div class="rank">'+idx.map((i,pos)=>
+    `<div class="rankrow ${pos===0?'first':''}"><span class="pos">${pos+1}°</span>
+     <span class="nm">${PG[i]}</span><span class="sc">${pgScores[i]} 🪙</span></div>`).join('')+'</div>';
+  SFX.endWin();
+  pgShow('partyEnd'); startCoins();
+}
+
 /* ---------- AUDIO: suoni brevi generati, nessun file esterno ---------- */
 let audioOn = true, actx = null;
 function ac(){ if(!actx){ try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return actx; }
@@ -1247,6 +1574,35 @@ function startCoins(){
   coinsRAF=requestAnimationFrame(draw);
 }
 function stopCoins(){ if(coinsRAF){ cancelAnimationFrame(coinsRAF); coinsRAF=null; } }
+let coins2RAF=null;
+function startCoins2(){
+  const cv=$('coinsCanvas2'); if(!cv) return;
+  const ctx=cv.getContext('2d');
+  function size(){ cv.width=cv.clientWidth; cv.height=cv.clientHeight; }
+  size(); window.addEventListener('resize', size);
+  const coins=[];
+  for(let i=0;i<16;i++) coins.push({x:Math.random()*cv.width, y:Math.random()*cv.height,
+    r:6+Math.random()*11, vy:14+Math.random()*26, sp:0.6+Math.random()*1.6,
+    ph:Math.random()*Math.PI*2, sway:8+Math.random()*22});
+  let last=performance.now();
+  function draw(now){
+    const dt=Math.min(0.05,(now-last)/1000); last=now;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    coins.forEach(c=>{
+      c.y+=c.vy*dt; c.ph+=c.sp*dt;
+      if(c.y-c.r>cv.height){ c.y=-c.r*2; c.x=Math.random()*cv.width; }
+      const x=c.x+Math.sin(c.ph)*c.sway, sq=Math.abs(Math.cos(c.ph*1.3));
+      ctx.save(); ctx.globalAlpha=0.32;
+      ctx.beginPath(); ctx.ellipse(x,c.y,Math.max(1.5,c.r*sq),c.r,0,0,Math.PI*2);
+      ctx.fillStyle='#E8B400'; ctx.fill();
+      ctx.lineWidth=Math.max(1,c.r*0.16); ctx.strokeStyle='#A87A20'; ctx.stroke();
+      ctx.restore();
+    });
+    coins2RAF=requestAnimationFrame(draw);
+  }
+  coins2RAF=requestAnimationFrame(draw);
+}
+function stopCoins2(){ if(coins2RAF){ cancelAnimationFrame(coins2RAF); coins2RAF=null; } }
 
 /* ---------- TUTORIAL ---------- */
 const STEPS = [
@@ -1310,14 +1666,28 @@ function renderStep(){
   $('startBtn').textContent = (step===STEPS.length-1)?'GIOCA':'AVANTI';
   $('skipBtn').style.display = (step===STEPS.length-1)?'none':'block';
 }
+/* --- navigazione tra le due modalità --- */
+$('modeSolo').onclick=()=>{ SFX.tap(); stopCoins2(); pgShow('startOverlay'); step=0; renderStep(); startCoins(); };
+$('modeParty').onclick=()=>{ SFX.tap(); stopCoins2(); partySetup(); };
+$('partyBack').onclick=()=>{ pgShow('modeOverlay'); startCoins2(); };
+$('addPlayer').onclick=()=>{ if(PG.length<6){ PG.push(''); renderPlayers(); } };
+$('partyStart').onclick=()=>{ SFX.tap(); partyStart(); };
+$('partyAgain').onclick=()=>{ stopCoins(); partyStart(); };
+$('partyMenu').onclick=()=>{ stopCoins(); pgShow('modeOverlay'); startCoins2(); };
+document.querySelectorAll('#roundsSel button').forEach(b=>{
+  b.onclick=()=>{ SFX.tap(); pgRounds=+b.dataset.r;
+    document.querySelectorAll('#roundsSel button').forEach(x=>x.classList.toggle('on', x===b)); };
+});
+
 $('startBtn').onclick=()=>{ SFX.tap(); if(step<STEPS.length-1){ step++; renderStep(); } else startGame(); };
 $('skipBtn').onclick=()=>startGame();
 $('againBtn').onclick=()=>{ step=0; stopCoins(); startGame(); };
+$('soloMenu').onclick=()=>{ stopCoins(); pgShow('modeOverlay'); startCoins2(); };
 $('soundBtn').onclick=()=>{ audioOn=!audioOn; updateSoundBtn(); if(audioOn) SFX.tap(); };
 updateSoundBtn();
 caricaProgresso();
 renderStep();
-startCoins();
+startCoins2();
 </script>
 </body>
 </html>
