@@ -292,7 +292,7 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · v1.8<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · v1.9<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
 <div class="overlay" id="modeOverlay">
@@ -309,7 +309,7 @@
       <span class="mt"><b>TRA AMICI</b><span>2-6 giocatori, un solo telefono che gira</span></span>
     </button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span id="signVer">v1.8 · © 2026 · tutti i diritti riservati</span></div>
+      <span id="signVer">v1.9 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -321,22 +321,27 @@
     <button class="cta" id="startBtn">AVANTI</button>
     <button class="skip" id="skipBtn">salta e gioca</button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span>v1.8 · © 2026 · tutti i diritti riservati</span></div>
+      <span>v1.9 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
 
 <!-- SETUP PARTY -->
+<div class="overlay hidden" id="partyTuto">
+  <div class="panel">
+    <div id="ptStep"></div>
+    <div class="dots" id="ptDots"></div>
+    <button class="cta" id="ptNext">AVANTI</button>
+    <button class="skip" id="ptSkip">salta e gioca</button>
+  </div>
+</div>
+
 <div class="overlay hidden" id="partySetup">
   <div class="panel">
     <h2 class="ph">TRA AMICI</h2>
-    <div class="box" style="text-align:left;font-size:13px;line-height:1.6;margin-bottom:14px">
-      <b style="color:var(--giallo)">Un solo telefono che gira al tavolo.</b><br>
-      A ogni turno uno è il <b>Rispondente</b> e gli altri scommettono su di lui.<br><br>
-      <b style="color:var(--oro)">1.</b> Il telefono passa a ogni <b>Puntatore</b>, che sceglie di nascosto la posta e se l'altro <b>indovinerà</b> o <b>sbaglierà</b>.<br><br>
-      <b style="color:var(--oro)">2.</b> Poi torna al Rispondente: 3-2-1 e ha <b>15 secondi</b> per rispondere davanti a tutti.<br><br>
-      <b style="color:var(--oro)">3.</b> Si scopre tutto: chi ha puntato bene guadagna, chi ha sbagliato paga.<br><br>
-      <span style="opacity:.75">Il Rispondente guadagna <b>+1 per ogni giocatore che credeva sbagliasse</b>: più li inganni, più vinci. Ma se sbaglia, perde la posta.</span>
+    <div class="box" style="font-size:12.5px;line-height:1.5;margin-bottom:14px;opacity:.85">
+      Un solo telefono che gira: si punta di nascosto, si risponde davanti a tutti.<br>
+      <button class="skip" id="rivediRegole" style="margin-top:6px">rivedi le regole</button>
     </div>
     <p style="font-size:13px;opacity:.8">Inserisci i nomi. Servono almeno 2 giocatori.</p>
     <div id="playerList"></div>
@@ -1306,7 +1311,7 @@ function endGame(){
 let PG=[], pgScores=[], pgTurn=0, pgRounds=12, pgDeck=[], pgCur=null;
 let pgResp=0, pgBets={}, pgBetIdx=0, pgOrder=[], pgStake={};
 
-function pgShow(id){ ['modeOverlay','startOverlay','partySetup','passOverlay','partyEnd','endOverlay']
+function pgShow(id){ ['modeOverlay','startOverlay','partyTuto','partySetup','passOverlay','partyEnd','endOverlay']
   .forEach(x=>$(x).classList.add('hidden')); if(id) $(id).classList.remove('hidden'); }
 /* la scoreboard Tu/Banco serve solo nella Sfida al Banco */
 function scoreboardVisibile(on){ $('scoreboard').style.display = on ? 'flex' : 'none'; }
@@ -1529,6 +1534,62 @@ function pgEnd(){
   pgShow('partyEnd'); startCoins();
 }
 
+
+/* ---------- TUTORIAL MODALITÀ TRA AMICI ---------- */
+const PSTEPS = [
+ {html:`<div class="big-ic">👥</div><h2>TRA AMICI</h2>
+   <p>Da 2 a 6 giocatori con <b style="color:var(--giallo)">un solo telefono</b> che gira al tavolo.</p>
+   <div class="box">
+     Non basta sapere le risposte: devi indovinare <b>quando sbaglieranno gli altri</b> —
+     e ingannarli quando tocca a te.<br><br>
+     Ognuno parte con <b>15 monete</b>. Vince chi ne ha di più alla fine.
+   </div>`},
+
+ {html:`<div class="big-ic">🔄</div><h2>COME GIRA IL TURNO</h2>
+   <div class="box">
+     <b style="color:var(--oro)">1.</b> A ogni turno uno è il <b>Rispondente</b> (a rotazione).<br><br>
+     <b style="color:var(--oro)">2.</b> Il telefono passa a ogni altro giocatore: ognuno sceglie <b>di nascosto</b>
+     la posta e se il Rispondente <b>indovinerà</b> o <b>sbaglierà</b>.<br><br>
+     <b style="color:var(--oro)">3.</b> Il telefono torna al Rispondente: <b>3-2-1</b> e ha <b>15 secondi</b>
+     per rispondere davanti a tutti.<br><br>
+     <b style="color:var(--oro)">4.</b> Si scopre tutto insieme e si pagano le monete.
+   </div>`},
+
+ {html:`<div class="big-ic">🎤</div><h2>SE RISPONDI TU</h2>
+   <p>Prima scegli <b style="color:var(--giallo)">quanto ci credi</b> (1-3), poi rispondi.</p>
+   <div class="box">
+     <div class="row"><span class="k g">+</span><span>Se indovini guadagni <b>+1 per ogni giocatore</b> che aveva scommesso che sbagliavi. Più li inganni, più vinci!</span></div>
+     <div class="row"><span class="k r">−</span><span>Se sbagli (o scade il tempo) <b>perdi la posta</b> che avevi scelto.</span></div>
+     <div style="opacity:.75;margin-top:8px">Puoi recitare: fingi di non sapere per farli puntare contro di te, poi rispondi giusto.
+     <b>È qui che si vince.</b></div>
+   </div>`},
+
+ {html:`<div class="big-ic">🎯</div><h2>SE SCOMMETTI TU</h2>
+   <p>Guarda in faccia chi risponde: sta bluffando o è nel panico vero?</p>
+   <div class="box">
+     <div class="row"><span class="k g">✓</span><span><b>GIUSTO</b> — scommetti che indovinerà</span></div>
+     <div class="row"><span class="k r">✗</span><span><b>SBAGLIATO</b> — scommetti che toppa</span></div>
+     <div class="row"><span class="k o">1-3</span><span>Scegli <b>quanto rischiare</b>: vinci o perdi esattamente quello che punti.</span></div>
+     <div style="opacity:.75;margin-top:8px">Attento: se punti SBAGLIATO e lui indovina, gli regali una moneta.</div>
+   </div>`},
+
+ {html:`<div class="big-ic">🏆</div><h2>PRONTI?</h2>
+   <div class="box">
+     Scegli <b>6, 12 o 18 turni</b> in base a quanto tempo avete.<br><br>
+     Il ruolo di Rispondente <b>ruota automaticamente</b>, così tocca a tutti.<br><br>
+     Alla fine c'è la <b>classifica</b> con il podio.
+     <div style="opacity:.75;margin-top:8px">Consiglio: mettetevi in cerchio e guardatevi in faccia.
+     Il gioco vive di quello.</div>
+   </div>`}
+];
+let pstep=0;
+function renderPStep(){
+  $('ptStep').innerHTML=`<div class="tstep">${PSTEPS[pstep].html}</div>`;
+  $('ptDots').innerHTML=PSTEPS.map((_,i)=>`<span class="${i===pstep?'on':''}"></span>`).join('');
+  $('ptNext').textContent=(pstep===PSTEPS.length-1)?'SCEGLI I GIOCATORI':'AVANTI';
+  $('ptSkip').style.display=(pstep===PSTEPS.length-1)?'none':'block';
+}
+
 /* ---------- AUDIO: suoni brevi generati, nessun file esterno ---------- */
 let audioOn = true, actx = null;
 function ac(){ if(!actx){ try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return actx; }
@@ -1690,10 +1751,14 @@ function renderStep(){
 }
 /* --- navigazione tra le due modalità --- */
 $('modeSolo').onclick=()=>{ SFX.tap(); stopCoins2(); pgShow('startOverlay'); step=0; renderStep(); startCoins(); };
-$('modeParty').onclick=()=>{ SFX.tap(); stopCoins2(); partySetup(); };
+$('modeParty').onclick=()=>{ SFX.tap(); stopCoins2(); pstep=0; pgShow('partyTuto'); renderPStep(); };
+$('ptNext').onclick=()=>{ SFX.tap(); if(pstep<PSTEPS.length-1){ pstep++; renderPStep(); } else partySetup(); };
+$('ptSkip').onclick=()=>partySetup();
 $('partyBack').onclick=()=>{ pgShow('modeOverlay'); startCoins2(); };
+
 $('addPlayer').onclick=()=>{ if(PG.length<6){ PG.push(''); renderPlayers(); } };
 $('partyStart').onclick=()=>{ SFX.tap(); partyStart(); };
+$('rivediRegole').onclick=()=>{ pstep=0; pgShow('partyTuto'); renderPStep(); };
 $('partyAgain').onclick=()=>{ stopCoins(); partyStart(); };
 $('partyMenu').onclick=()=>{ stopCoins(); pgShow('modeOverlay'); startCoins2(); };
 document.querySelectorAll('#roundsSel button').forEach(b=>{
