@@ -173,9 +173,12 @@
   .turnwho{text-align:center; font-family:'Anton',sans-serif; font-size:15px; color:var(--giallo);
     letter-spacing:.5px; margin-bottom:6px;}
   .miniscore{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:8px;}
-  .miniscore span{background:var(--antracite); border:1px solid #000; border-radius:8px;
-    padding:3px 8px; font-size:11.5px;}
+  .miniscore span{background:var(--antracite); border:1px solid #000; border-radius:9px;
+    padding:5px 10px; font-size:13px; box-shadow:0 2px 0 #000;}
+  .miniscore span b{color:var(--oro); font-family:'Anton',sans-serif; font-size:15px; margin-left:2px;}
   .miniscore span.act{background:var(--giallo); color:var(--nero); font-weight:600;}
+  .miniscore span.act b{color:#7a5c00;}
+  .miniscore span.now{border-color:var(--giallo); box-shadow:0 2px 0 #000, 0 0 0 1px var(--giallo);}
 
   /* aiuto sbloccabile */
   .help{width:100%; margin:8px 0 4px; padding:11px; border-radius:12px; cursor:pointer;
@@ -267,7 +270,7 @@
   <button class="sound" id="soundBtn" title="Audio">🔊</button>
   <header>
     <div class="logo"><div class="l1">CHI</div><div class="l2">SBAGLIA</div><div class="l3">PAGA</div></div>
-    <div class="scoreboard">
+    <div class="scoreboard" id="scoreboard">
       <div class="chip me"><div class="who">Tu</div><div class="val"><span id="meScore">15</span><span class="coin">●</span></div></div>
       <div class="chip bank"><div class="who">Banco</div><div class="val"><span id="bankScore">15</span><span class="coin">●</span></div></div>
     </div>
@@ -289,7 +292,7 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · v1.7<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · v1.8<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
 <div class="overlay" id="modeOverlay">
@@ -306,7 +309,7 @@
       <span class="mt"><b>TRA AMICI</b><span>2-6 giocatori, un solo telefono che gira</span></span>
     </button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span id="signVer">v1.7 · © 2026 · tutti i diritti riservati</span></div>
+      <span id="signVer">v1.8 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -318,7 +321,7 @@
     <button class="cta" id="startBtn">AVANTI</button>
     <button class="skip" id="skipBtn">salta e gioca</button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span>v1.7 · © 2026 · tutti i diritti riservati</span></div>
+      <span>v1.8 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -1006,7 +1009,7 @@ function startTimer(onExpire){
 function stopTimer(){ if(timerId){ clearInterval(timerId); timerId=null; } $('timerBox').innerHTML=''; }
 
 function startGame(){
-  stopCoins(); SFX.start();
+  stopCoins(); SFX.start(); scoreboardVisibile(true);
   // pesca 10 domande evitando quelle già viste nelle partite precedenti
   const sbloccate = categorieSbloccate();
   const disponibili = QUESTIONS.concat(SPECIALI.filter(x=>sbloccate.includes(x.cat)));
@@ -1305,6 +1308,8 @@ let pgResp=0, pgBets={}, pgBetIdx=0, pgOrder=[], pgStake={};
 
 function pgShow(id){ ['modeOverlay','startOverlay','partySetup','passOverlay','partyEnd','endOverlay']
   .forEach(x=>$(x).classList.add('hidden')); if(id) $(id).classList.remove('hidden'); }
+/* la scoreboard Tu/Banco serve solo nella Sfida al Banco */
+function scoreboardVisibile(on){ $('scoreboard').style.display = on ? 'flex' : 'none'; }
 
 function renderPlayers(){
   const box=$('playerList'); box.innerHTML='';
@@ -1361,7 +1366,7 @@ function pgAskBet(){
 }
 
 function pgBetScreen(p){
-  pgShow(null);
+  pgShow(null); scoreboardVisibile(false);
   $('roleLabel').textContent='🎯 Punta '+PG[p];
   $('turnNo').textContent=pgTurn+1; $('turnTot').textContent=pgRounds;
   pgHeader(p);
@@ -1403,12 +1408,16 @@ function pgAskAnswer(){
 }
 
 function pgHeader(active){
-  const ms=PG.map((n,i)=>`<span class="${i===active?'act':''}">${n} ${pgScores[i]}</span>`).join('');
+  const ms=PG.map((n,i)=>{
+    const cls = i===pgResp ? 'act' : (i===active ? 'now' : '');
+    const ic  = i===pgResp ? '🎤 ' : '';
+    return `<span class="${cls}">${ic}${n} <b>${pgScores[i]}</b></span>`;
+  }).join('');
   $('dossier').innerHTML=`<div class="miniscore">${ms}</div>`;
 }
 
 function pgAnswerScreen(){
-  pgShow(null);
+  pgShow(null); scoreboardVisibile(false);
   $('roleLabel').textContent='🎤 Risponde '+PG[pgResp];
   pgHeader(pgResp);
   $('prompt').innerHTML=`<b>${PG[pgResp]}</b>, tocca a te. Quanto ci credi?`;
