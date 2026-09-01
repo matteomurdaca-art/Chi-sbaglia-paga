@@ -150,7 +150,9 @@
   .modebtn:active{transform:translateY(3px); box-shadow:0 2px 0 #17742f;}
   .modebtn.alt{background:linear-gradient(180deg,#F5B800,#D99F00); box-shadow:0 5px 0 #8a6d00; color:var(--nero);}
   .modebtn.alt:active{box-shadow:0 2px 0 #8a6d00;}
-  .modebtn .mi{font-size:30px; flex:none;}
+  .modebtn.duo{background:linear-gradient(180deg,#8B5CF6,#6D3FD4); box-shadow:0 5px 0 #4A2A96;}
+  .modebtn.duo:active{box-shadow:0 2px 0 #4A2A96;}
+  .modebtn .mi{font-size:30px; flex:none; width:38px; text-align:center; line-height:1;}
   .modebtn .mt{display:flex; flex-direction:column; line-height:1.25;}
   .modebtn .mt b{font-family:'Anton',sans-serif; font-size:19px; letter-spacing:.5px;}
   .modebtn .mt span{font-size:12px; opacity:.85;}
@@ -292,7 +294,7 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · v2.2<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · v2.3<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
 <div class="overlay" id="modeOverlay">
@@ -308,8 +310,12 @@
       <span class="mi">👥</span>
       <span class="mt"><b>TRA AMICI</b><span>3-6 giocatori, un solo telefono che gira</span></span>
     </button>
+    <button class="modebtn duo" id="modeDuo">
+      <span class="mi">🃏</span>
+      <span class="mt"><b>IN DUE + BANCO</b><span>2 giocatori sfidano anche il computer</span></span>
+    </button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span id="signVer">v2.2 · © 2026 · tutti i diritti riservati</span></div>
+      <span id="signVer">v2.3 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -321,7 +327,7 @@
     <button class="cta" id="startBtn">AVANTI</button>
     <button class="skip" id="skipBtn">salta e gioca</button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span>v2.2 · © 2026 · tutti i diritti riservati</span></div>
+      <span>v2.3 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -338,9 +344,9 @@
 
 <div class="overlay hidden" id="partySetup">
   <div class="panel">
-    <h2 class="ph">TRA AMICI</h2>
+    <h2 class="ph" id="setupTitle">TRA AMICI</h2>
     <div class="box" style="font-size:12.5px;line-height:1.5;margin-bottom:14px;opacity:.85">
-      Un solo telefono che gira: si punta di nascosto, si risponde davanti a tutti.<br>
+      <span id="setupSub">Un solo telefono che gira: si punta di nascosto, si risponde davanti a tutti.</span><br>
       <button class="skip" id="rivediRegole" style="margin-top:6px">rivedi le regole</button>
     </div>
     <p style="font-size:13px;opacity:.8">Inserisci i nomi. Servono almeno <b style="color:var(--giallo)">3 giocatori</b>.<br>
@@ -1336,18 +1342,32 @@ function renderPlayers(){
 }
 
 function partySetup(){
-  if(PG.length===0) PG=['','',''];
+  duoMode=false;
+  if(PG.length===0 || PG.length<3) PG=['','',''];
+  $('setupTitle').textContent='TRA AMICI';
+  $('setupSub').textContent='Un solo telefono che gira: si punta di nascosto, si risponde davanti a tutti.';
+  $('addPlayer').style.display='block';
   pgShow('partySetup'); renderPlayers();
 }
 
 function partyStart(){
-  const nomi=PG.map((n,i)=> (n||'').trim() || 'Giocatore '+(i+1));
-  if(nomi.length<3){ alert('Servono almeno 3 giocatori per la modalità Tra Amici.\nIn due potete giocare la Sfida al Banco!'); return; }
+  let nomi=PG.map((n,i)=> (n||'').trim() || 'Giocatore '+(i+1));
+  if(duoMode){
+    if(nomi.length!==2) return;
+    nomi=[nomi[0],nomi[1],'Banco'];
+    persona=PERSONAS[pick(Object.keys(PERSONAS))];   // carattere nascosto del Banco
+  } else if(nomi.length<3){
+    alert('Servono almeno 3 giocatori per la modalità Tra Amici.\nIn due potete giocare In due + Banco!'); return;
+  }
   PG=nomi;
   const iniziali = PG.length===3 ? 15 : (PG.length===4 ? 18 : 20);
   pgScores=PG.map(()=>iniziali); pgTurn=0;
   const pool=QUESTIONS.concat(SPECIALI.filter(x=>categorieSbloccate().includes(x.cat)));
   pgDeck=shuffle(pool).slice(0,pgRounds);
+  if(duoMode && persona.materie){
+    const cats=shuffle([...new Set(pgDeck.map(x=>x.cat))]);
+    forti=cats.slice(0,2); deboli=cats.slice(2,4);
+  } else if(duoMode){ forti=[]; deboli=[]; }
   SFX.start(); stopCoins(); pgNextTurn();
 }
 
@@ -1362,8 +1382,15 @@ function pgNextTurn(){
 
 /* ogni Puntatore inserisce di nascosto la sua scommessa */
 function pgAskBet(){
-  if(pgBetIdx>=pgOrder.length) return pgAskAnswer();
+  if(pgBetIdx>=pgOrder.length){
+    return (duoMode && pgResp===2) ? duoBancoTurno() : pgAskAnswer();
+  }
   const p=pgOrder[pgBetIdx];
+  // in modalità duo il Banco punta da solo, senza passare il telefono
+  if(duoMode && p===2){
+    const [g,s]=duoBancoPunta();
+    pgBets[p]=g; pgStake[p]=s; pgBetIdx++; return pgAskBet();
+  }
   pgShow('passOverlay');
   $('passTitle').textContent='PASSA A '+PG[p].toUpperCase();
   $('passMsg').innerHTML=`Solo <b>${PG[p]}</b> deve guardare lo schermo.`;
@@ -1541,6 +1568,125 @@ function pgEnd(){
   pgShow('partyEnd'); startCoins();
 }
 
+
+
+/* ============================================================
+   MODALITÀ IN DUE + BANCO: 2 umani + il computer come 3° giocatore
+   ============================================================ */
+let duoMode=false;   // quando true, l'indice 2 è il Banco
+
+function duoSetup(){
+  duoMode=true;
+  if(PG.length!==2) PG=['',''];
+  pgShow('partySetup');
+  $('setupTitle').textContent='IN DUE + BANCO';
+  $('setupSub').innerHTML='Voi due contro il <b style="color:var(--giallo)">Banco</b>: risponde e scommette anche lui, e può vincere.';
+  $('addPlayer').style.display='none';
+  renderPlayers();
+}
+
+/* il Banco decide la sua puntata su un umano */
+function duoBancoPunta(){
+  const d = pgCur ? pgCur.diff : 0.5;
+  const lv = livelloDi(banca);
+  // stima del Banco: quanto crede che l'umano sbaglierà
+  let p = d + persona.betWrongBias*(1-lv.astuzia) + (d-0.5)*lv.astuzia;
+  if(persona.chaos) p += (Math.random()*2-1)*persona.chaos*(1-lv.astuzia);
+  if(persona.opport) p += (pgScores[2] < Math.max(pgScores[0],pgScores[1]) ? -0.22 : 0.28);
+  p = clamp(p,0.1,0.9);
+  const diceSbagliato = Math.random() < p;
+  const conf = Math.abs(d-0.5)*2;
+  const posta = conf<0.3 ? 1 : (conf<0.6 ? 2 : 3);
+  return [!diceSbagliato, posta];        // [dice_giusto, posta]
+}
+
+/* il Banco risponde */
+function duoBancoRisponde(){
+  const lv=livelloDi(banca);
+  let bonus=0;
+  if(persona.materie){
+    if(forti.includes(pgCur.cat)) bonus=0.35;
+    else if(deboli.includes(pgCur.cat)) bonus=-0.35;
+  }
+  let p=(1-pgCur.diff)+persona.skill+lv.skill+bonus;
+  if(persona.chaos) p+=(Math.random()*2-1)*persona.chaos*(1-lv.astuzia);
+  p=clamp(p,0.05,0.95);
+  let ok=Math.random()<p;
+  const fum=Math.max(0.02,persona.fumble-lv.skill*0.5);
+  if(ok && Math.random()<fum) ok=false;
+  const conf=Math.abs(p-0.5)*2;
+  const posta = conf<0.3 ? 1 : (conf<0.6 ? 2 : 3);
+  return [ok, posta];
+}
+
+/* schermata: il Banco risponde, i due umani hanno già puntato */
+function duoBancoTurno(){
+  const [ok, postaB] = duoBancoRisponde();
+  pgShow(null); scoreboardVisibile(false);
+  $('roleLabel').textContent='🎩 Risponde il Banco';
+  $('turnNo').textContent=pgTurn+1; $('turnTot').textContent=pgRounds;
+  pgHeader(2);
+  $('prompt').innerHTML=`Tocca al <b>Banco</b>. Avete puntato entrambi: vediamo…`;
+  bankSay(SAYS_ANSWER);
+  const card=$('card'), rib=$('cardRibbon');
+  card.className='card q'; rib.className='ribbon'; rib.style.background='';
+  rib.textContent='CHI SBAGLIA PAGA';
+  $('cardCat').textContent=pgCur.cat; $('cardText').textContent=pgCur.q;
+  $('timerBox').innerHTML='';
+  $('controls').innerHTML='';
+  const attesa=document.createElement('div');
+  attesa.className='result'; attesa.style.background='rgba(255,255,255,.05)';
+  attesa.innerHTML=`<span style="font-size:14px">Il Banco ci sta pensando…</span>`;
+  $('controls').appendChild(attesa);
+  $('hint').textContent='';
+  setTimeout(()=>{ duoResolveBanco(ok, postaB); }, 2200);
+}
+
+function duoResolveBanco(ok, postaB){
+  $('bankSayBox').innerHTML='';
+  let ingannati=0, fiduciosi=0, righe=[];
+  pgOrder.forEach(p=>{
+    const g=pgBets[p], s=pgStake[p]||2;
+    const corretta=(g===ok);
+    const delta = corretta ? s : -s;
+    if(!ok && g) fiduciosi++;
+    if(!g) ingannati++;
+    pgScores[p]+=delta;
+    righe.push(`<div class="rankrow"><span class="nm">${PG[p]} <span style="opacity:.6;font-size:12px">
+      (${g?'GIUSTO ✓':'SBAGLIATO ✗'})</span></span>
+      <span class="sc" style="color:${delta>=0?'#7ee08f':'#ff8a82'}">${delta>0?'+':''}${delta}</span></div>`);
+  });
+  const dB = ok ? ingannati : -(postaB+fiduciosi);
+  pgScores[2]+=dB;
+
+  const card=$('card'), rib=$('cardRibbon'); card.className='card a';
+  const detta = ok ? pgCur.a : pick(pgCur.wrong);
+  if(ok){ rib.className='ribbon correct'; rib.style.background=''; rib.textContent='IL BANCO HA INDOVINATO ✓';
+    $('cardText').innerHTML=col([['Il Banco ha risposto',.6,13,400,null],[detta,1,24,600,'var(--verde)']],pgCur.detail);
+  } else { rib.className='ribbon'; rib.style.background='var(--rosso)'; rib.textContent='IL BANCO HA SBAGLIATO ✗';
+    $('cardText').innerHTML=
+      `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;width:100%">
+       <span style="opacity:.55;font-size:12px">Il Banco ha risposto</span>
+       <span style="color:#ff8a82;text-decoration:line-through;font-size:20px">${detta}</span>
+       <span style="opacity:.55;font-size:12px;margin-top:8px">La risposta giusta era</span>
+       <span style="color:var(--giallo);font-size:24px">${pgCur.a}</span>
+       ${pgCur.detail?`<span class="detail">${pgCur.detail}</span>`:''}</div>`;
+  }
+  const res=document.createElement('div'); res.className='result '+(ok?'lose':'win');
+  const seg=dB>0?'+':'';
+  res.innerHTML=`<b>Il Banco</b> ${ok?'indovina':'sbaglia'}<span class="delta">${seg}${dB}</span>
+    <div style="font-size:12px;opacity:.75;font-weight:400">${ok
+      ? (ingannati>0?`ha ingannato ${ingannati} di voi!`:'lo avevate previsto')
+      : `perde la posta di ${postaB}${fiduciosi>0?` + ${fiduciosi} di penale`:''}`}</div>`;
+  const dett=document.createElement('div'); dett.className='rank'; dett.innerHTML=righe.join('');
+  $('controls').innerHTML=''; $('controls').appendChild(res); $('controls').appendChild(dett);
+  (ok?SFX.lose:SFX.win)();
+  pgHeader(2);
+  const btn=document.createElement('button'); btn.className='cta';
+  btn.textContent=(pgTurn+1>=pgRounds)?'CLASSIFICA FINALE':'TURNO SUCCESSIVO';
+  btn.onclick=()=>{ pgTurn++; pgNextTurn(); };
+  $('controls').appendChild(btn);
+}
 
 /* ---------- TUTORIAL MODALITÀ TRA AMICI ---------- */
 const PSTEPS = [
@@ -1760,17 +1906,18 @@ function renderStep(){
   $('skipBtn').style.display = (step===STEPS.length-1)?'none':'block';
 }
 /* --- navigazione tra le due modalità --- */
-$('modeSolo').onclick=()=>{ SFX.tap(); stopCoins2(); pgShow('startOverlay'); step=0; renderStep(); startCoins(); };
-$('modeParty').onclick=()=>{ SFX.tap(); stopCoins2(); pstep=0; pgShow('partyTuto'); renderPStep(); };
+$('modeSolo').onclick=()=>{ SFX.tap(); stopCoins2(); duoMode=false; pgShow('startOverlay'); step=0; renderStep(); startCoins(); };
+$('modeParty').onclick=()=>{ SFX.tap(); stopCoins2(); duoMode=false; PG=[]; pstep=0; pgShow('partyTuto'); renderPStep(); };
+$('modeDuo').onclick=()=>{ SFX.tap(); stopCoins2(); PG=[]; duoSetup(); };
 $('ptNext').onclick=()=>{ SFX.tap(); if(pstep<PSTEPS.length-1){ pstep++; renderPStep(); } else partySetup(); };
 $('ptSkip').onclick=()=>partySetup();
 $('partyBack').onclick=()=>{ pgShow('modeOverlay'); startCoins2(); };
 
 $('addPlayer').onclick=()=>{ if(PG.length<6){ PG.push(''); renderPlayers(); } };
 $('partyStart').onclick=()=>{ SFX.tap(); partyStart(); };
-$('rivediRegole').onclick=()=>{ pstep=0; pgShow('partyTuto'); renderPStep(); };
-$('partyAgain').onclick=()=>{ stopCoins(); partyStart(); };
-$('partyMenu').onclick=()=>{ stopCoins(); pgShow('modeOverlay'); startCoins2(); };
+$('rivediRegole').onclick=()=>{ if(duoMode){ pgShow('partySetup'); return; } pstep=0; pgShow('partyTuto'); renderPStep(); };
+$('partyAgain').onclick=()=>{ stopCoins(); PG=PG.slice(0, duoMode?2:PG.length); partyStart(); };
+$('partyMenu').onclick=()=>{ stopCoins(); duoMode=false; PG=[]; pgShow('modeOverlay'); startCoins2(); };
 document.querySelectorAll('#roundsSel button').forEach(b=>{
   b.onclick=()=>{ SFX.tap(); pgRounds=+b.dataset.r;
     document.querySelectorAll('#roundsSel button').forEach(x=>x.classList.toggle('on', x===b)); };
