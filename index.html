@@ -292,7 +292,7 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · v1.9<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · v2.2<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
 <div class="overlay" id="modeOverlay">
@@ -306,10 +306,10 @@
     </button>
     <button class="modebtn alt" id="modeParty">
       <span class="mi">👥</span>
-      <span class="mt"><b>TRA AMICI</b><span>2-6 giocatori, un solo telefono che gira</span></span>
+      <span class="mt"><b>TRA AMICI</b><span>3-6 giocatori, un solo telefono che gira</span></span>
     </button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span id="signVer">v1.9 · © 2026 · tutti i diritti riservati</span></div>
+      <span id="signVer">v2.2 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -321,7 +321,7 @@
     <button class="cta" id="startBtn">AVANTI</button>
     <button class="skip" id="skipBtn">salta e gioca</button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span>v1.9 · © 2026 · tutti i diritti riservati</span></div>
+      <span>v2.2 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -343,7 +343,8 @@
       Un solo telefono che gira: si punta di nascosto, si risponde davanti a tutti.<br>
       <button class="skip" id="rivediRegole" style="margin-top:6px">rivedi le regole</button>
     </div>
-    <p style="font-size:13px;opacity:.8">Inserisci i nomi. Servono almeno 2 giocatori.</p>
+    <p style="font-size:13px;opacity:.8">Inserisci i nomi. Servono almeno <b style="color:var(--giallo)">3 giocatori</b>.<br>
+      <span style="font-size:11.5px;opacity:.7">Siete in due? Giocate la <b>Sfida al Banco</b>.</span></p>
     <div id="playerList"></div>
     <button class="addp" id="addPlayer">+ Aggiungi giocatore</button>
     <div class="stake" style="margin-top:14px">
@@ -1324,7 +1325,7 @@ function renderPlayers(){
     inp.value=nome; inp.placeholder='Giocatore '+(i+1); inp.maxLength=14;
     inp.oninput=()=>{ PG[i]=inp.value; };
     r.appendChild(inp);
-    if(PG.length>2){
+    if(PG.length>3){
       const d=document.createElement('button'); d.className='del'; d.textContent='×';
       d.onclick=()=>{ PG.splice(i,1); renderPlayers(); };
       r.appendChild(d);
@@ -1335,14 +1336,16 @@ function renderPlayers(){
 }
 
 function partySetup(){
-  if(PG.length===0) PG=['',''];
+  if(PG.length===0) PG=['','',''];
   pgShow('partySetup'); renderPlayers();
 }
 
 function partyStart(){
   const nomi=PG.map((n,i)=> (n||'').trim() || 'Giocatore '+(i+1));
-  if(nomi.length<2) return;
-  PG=nomi; pgScores=PG.map(()=>15); pgTurn=0;
+  if(nomi.length<3){ alert('Servono almeno 3 giocatori per la modalità Tra Amici.\nIn due potete giocare la Sfida al Banco!'); return; }
+  PG=nomi;
+  const iniziali = PG.length===3 ? 15 : (PG.length===4 ? 18 : 20);
+  pgScores=PG.map(()=>iniziali); pgTurn=0;
   const pool=QUESTIONS.concat(SPECIALI.filter(x=>categorieSbloccate().includes(x.cat)));
   pgDeck=shuffle(pool).slice(0,pgRounds);
   SFX.start(); stopCoins(); pgNextTurn();
@@ -1484,17 +1487,20 @@ function pgResolve(correct, st, btn, box, timeout){
   [...box.children].forEach(b=>b.disabled=true);
   if(btn) btn.classList.add(correct?'correct':'wrong');
   // punteggi
-  let ingannati=0, righe=[];
+  let ingannati=0, fiduciosi=0, righe=[];
   pgOrder.forEach(p=>{
     const puntoGiusto=pgBets[p], s=pgStake[p]||2;
     const ok = (puntoGiusto===correct);
-    pgScores[p] += ok ? s : -s;
-    if(!puntoGiusto) ingannati++;   // aveva puntato SBAGLIATO
+    const delta = ok ? s : -s;
+    // chi aveva creduto nel Rispondente non viene risarcito: la penale la paga solo lui
+    if(!correct && puntoGiusto) fiduciosi++;
+    pgScores[p] += delta;
+    if(!puntoGiusto) ingannati++;
     righe.push(`<div class="rankrow"><span class="nm">${PG[p]} <span style="opacity:.6;font-size:12px">
       (${puntoGiusto?'GIUSTO ✓':'SBAGLIATO ✗'})</span></span>
-      <span class="sc" style="color:${ok?'#7ee08f':'#ff8a82'}">${ok?'+':''}${ok?s:-s}</span></div>`);
+      <span class="sc" style="color:${delta>=0?'#7ee08f':'#ff8a82'}">${delta>0?'+':''}${delta}</span></div>`);
   });
-  let dResp = correct ? ingannati : -st;
+  let dResp = correct ? ingannati : -(st + fiduciosi);
   pgScores[pgResp] += dResp;
 
   // rivela
@@ -1510,7 +1516,8 @@ function pgResolve(correct, st, btn, box, timeout){
     <span class="delta">${segno}${dResp}</span>
     <div style="font-size:12px;opacity:.75;font-weight:400">${correct
       ? (ingannati>0?`ha ingannato ${ingannati} giocator${ingannati>1?'i':'e'}!`:'ma nessuno ci era cascato')
-      : `perde la posta di ${st}`}</div>`;
+      : `perde la posta di ${st}${fiduciosi>0
+        ? ` + ${fiduciosi} di penale: ${fiduciosi} giocator${fiduciosi>1?'i avevano':'e aveva'} creduto in ${PG[pgResp]}`:''}`}</div>`;
   const dett=document.createElement('div'); dett.className='rank'; dett.innerHTML=righe.join('');
   $('controls').innerHTML=''; $('controls').appendChild(res); $('controls').appendChild(dett);
   (correct?SFX.win:SFX.lose)();
@@ -1538,11 +1545,11 @@ function pgEnd(){
 /* ---------- TUTORIAL MODALITÀ TRA AMICI ---------- */
 const PSTEPS = [
  {html:`<div class="big-ic">👥</div><h2>TRA AMICI</h2>
-   <p>Da 2 a 6 giocatori con <b style="color:var(--giallo)">un solo telefono</b> che gira al tavolo.</p>
+   <p>Da 3 a 6 giocatori con <b style="color:var(--giallo)">un solo telefono</b> che gira al tavolo.</p>
    <div class="box">
      Non basta sapere le risposte: devi indovinare <b>quando sbaglieranno gli altri</b> —
      e ingannarli quando tocca a te.<br><br>
-     Ognuno parte con <b>15 monete</b>. Vince chi ne ha di più alla fine.
+     Ognuno parte con <b>15 monete</b> (18 in quattro, <b>20 da cinque in su</b>). Vince chi ne ha di più alla fine.
    </div>`},
 
  {html:`<div class="big-ic">🔄</div><h2>COME GIRA IL TURNO</h2>
@@ -1559,9 +1566,11 @@ const PSTEPS = [
    <p>Prima scegli <b style="color:var(--giallo)">quanto ci credi</b> (1-3), poi rispondi.</p>
    <div class="box">
      <div class="row"><span class="k g">+</span><span>Se indovini guadagni <b>+1 per ogni giocatore</b> che aveva scommesso che sbagliavi. Più li inganni, più vinci!</span></div>
-     <div class="row"><span class="k r">−</span><span>Se sbagli (o scade il tempo) <b>perdi la posta</b> che avevi scelto.</span></div>
+     <div class="row"><span class="k r">−</span><span>Se sbagli (o scade il tempo) <b>perdi la posta</b> che avevi scelto…</span></div>
+     <div class="row"><span class="k r">−</span><span>…più <b>1 moneta di penale</b> per ogni giocatore che aveva creduto in te (aveva puntato GIUSTO).</span></div>
      <div style="opacity:.75;margin-top:8px">Puoi recitare: fingi di non sapere per farli puntare contro di te, poi rispondi giusto.
-     <b>È qui che si vince.</b></div>
+     <b>È qui che si vince.</b><br>
+     Ma occhio: sbagliare <i>apposta</i> non conviene mai, perché il risarcimento lo paghi tu.</div>
    </div>`},
 
  {html:`<div class="big-ic">🎯</div><h2>SE SCOMMETTI TU</h2>
@@ -1570,7 +1579,8 @@ const PSTEPS = [
      <div class="row"><span class="k g">✓</span><span><b>GIUSTO</b> — scommetti che indovinerà</span></div>
      <div class="row"><span class="k r">✗</span><span><b>SBAGLIATO</b> — scommetti che toppa</span></div>
      <div class="row"><span class="k o">1-3</span><span>Scegli <b>quanto rischiare</b>: vinci o perdi esattamente quello che punti.</span></div>
-     <div style="opacity:.75;margin-top:8px">Attento: se punti SBAGLIATO e lui indovina, gli regali una moneta.</div>
+     <div style="opacity:.75;margin-top:8px">Se punti <b>SBAGLIATO</b> e lui indovina, gli regali una moneta.<br>
+     Se punti <b>GIUSTO</b> e lui sbaglia, perdi la posta — ma lui paga una penale per averti deluso.</div>
    </div>`},
 
  {html:`<div class="big-ic">🏆</div><h2>PRONTI?</h2>
