@@ -294,7 +294,7 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · v2.3<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · v2.4<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
 <div class="overlay" id="modeOverlay">
@@ -312,10 +312,10 @@
     </button>
     <button class="modebtn duo" id="modeDuo">
       <span class="mi">🃏</span>
-      <span class="mt"><b>IN DUE + BANCO</b><span>2 giocatori sfidano anche il computer</span></span>
+      <span class="mt"><b>IN DUE + BANCO</b><span>2 giocatori + il Banco come terzo sfidante</span></span>
     </button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span id="signVer">v2.3 · © 2026 · tutti i diritti riservati</span></div>
+      <span id="signVer">v2.4 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -327,7 +327,7 @@
     <button class="cta" id="startBtn">AVANTI</button>
     <button class="skip" id="skipBtn">salta e gioca</button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span>v2.3 · © 2026 · tutti i diritti riservati</span></div>
+      <span>v2.4 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -349,8 +349,7 @@
       <span id="setupSub">Un solo telefono che gira: si punta di nascosto, si risponde davanti a tutti.</span><br>
       <button class="skip" id="rivediRegole" style="margin-top:6px">rivedi le regole</button>
     </div>
-    <p style="font-size:13px;opacity:.8">Inserisci i nomi. Servono almeno <b style="color:var(--giallo)">3 giocatori</b>.<br>
-      <span style="font-size:11.5px;opacity:.7">Siete in due? Giocate la <b>Sfida al Banco</b>.</span></p>
+    <p style="font-size:13px;opacity:.8" id="setupHint"></p>
     <div id="playerList"></div>
     <button class="addp" id="addPlayer">+ Aggiungi giocatore</button>
     <div class="stake" style="margin-top:14px">
@@ -1338,7 +1337,7 @@ function renderPlayers(){
     }
     box.appendChild(r);
   });
-  $('addPlayer').style.display = PG.length>=6 ? 'none' : 'block';
+  $('addPlayer').style.display = (duoMode || PG.length>=6) ? 'none' : 'block';
 }
 
 function partySetup(){
@@ -1346,6 +1345,8 @@ function partySetup(){
   if(PG.length===0 || PG.length<3) PG=['','',''];
   $('setupTitle').textContent='TRA AMICI';
   $('setupSub').textContent='Un solo telefono che gira: si punta di nascosto, si risponde davanti a tutti.';
+  $('setupHint').innerHTML='Inserisci i nomi. Servono da <b style="color:var(--giallo)">3 a 6 giocatori</b>.<br>'+
+    '<span style="font-size:11.5px;opacity:.7">Siete solo in due? Provate <b>In due + Banco</b>.</span>';
   $('addPlayer').style.display='block';
   pgShow('partySetup'); renderPlayers();
 }
@@ -1357,7 +1358,7 @@ function partyStart(){
     nomi=[nomi[0],nomi[1],'Banco'];
     persona=PERSONAS[pick(Object.keys(PERSONAS))];   // carattere nascosto del Banco
   } else if(nomi.length<3){
-    alert('Servono almeno 3 giocatori per la modalità Tra Amici.\nIn due potete giocare In due + Banco!'); return;
+    alert('Servono almeno 3 giocatori per la modalità Tra amici.\nSe siete in due, scegliete In due + Banco!'); return;
   }
   PG=nomi;
   const iniziali = PG.length===3 ? 15 : (PG.length===4 ? 18 : 20);
@@ -1580,7 +1581,9 @@ function duoSetup(){
   if(PG.length!==2) PG=['',''];
   pgShow('partySetup');
   $('setupTitle').textContent='IN DUE + BANCO';
-  $('setupSub').innerHTML='Voi due contro il <b style="color:var(--giallo)">Banco</b>: risponde e scommette anche lui, e può vincere.';
+  $('setupSub').innerHTML='Voi due contro il <b style="color:var(--giallo)">Banco</b>: risponde e scommette anche lui, e può vincere la partita.';
+  $('setupHint').innerHTML='Inserisci i vostri <b style="color:var(--giallo)">2 nomi</b>: il Banco è il terzo giocatore.<br>'+
+    '<span style="font-size:11.5px;opacity:.7">Siete di più? Giocate <b>Tra amici</b>.</span>';
   $('addPlayer').style.display='none';
   renderPlayers();
 }
@@ -1892,7 +1895,7 @@ const STEPS = [
    </div>
    <div class="box" style="margin-top:10px">
      <b style="color:var(--giallo)">👥 C'è anche la modalità Tra Amici</b><br>
-     <span style="font-size:12.5px;opacity:.8">Dal menu iniziale: 2-6 giocatori con un solo telefono che gira.
+     <span style="font-size:12.5px;opacity:.8">Dal menu iniziale: 3-6 giocatori con un solo telefono che gira, oppure <b>In due + Banco</b> se siete in due.
      Lì il bluff è quello vero, perché vi guardate in faccia.</span>
    </div>`}
 ];
