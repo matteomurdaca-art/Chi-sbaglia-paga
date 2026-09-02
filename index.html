@@ -70,6 +70,11 @@
     color:#fff; font-family:'Anton',sans-serif; font-size:11px; letter-spacing:1px; padding:3px 16px;
     border-radius:4px; box-shadow:0 2px 0 var(--rosso-s); white-space:nowrap;}
   .card .ribbon.correct{background:var(--verde); box-shadow:0 2px 0 var(--verde-s);}
+  .diffb{display:inline-flex; align-items:center; gap:3px; font-size:9.5px; letter-spacing:1px;
+    margin-left:7px; vertical-align:middle;}
+  .diffb .dp{width:5px; height:5px; border-radius:50%; display:inline-block;}
+  .diffb b{margin-left:3px; font-weight:700;}
+
   .card .cat{font-size:11px; letter-spacing:1.5px; text-transform:uppercase; text-align:center; margin-top:22px; font-weight:600;}
   .card .text{flex:1; display:flex; align-items:center; justify-content:center; text-align:center;
     font-weight:600; font-size:21px; line-height:1.25; padding:10px 4px;}
@@ -130,7 +135,7 @@
   .panel .biglogo .a{font-size:32px;color:#fff;-webkit-text-stroke:1.5px #000;}
   .panel .biglogo .b{font-size:52px;color:var(--giallo);-webkit-text-stroke:2px #000;}
   .panel .biglogo .c{font-size:40px;color:#fff;-webkit-text-stroke:1.5px #000;}
-  .panel p{opacity:.85; font-size:14px; line-height:1.5; margin-bottom:8px;}
+  .panel p{opacity:.85; font-size:13px; line-height:1.45; margin-bottom:6px;}
   .panel .rules{background:var(--antracite); border-radius:14px; padding:14px 16px; text-align:left; font-size:13px; line-height:1.6; margin:14px 0; border:1px solid #000;}
   .panel .rules b{color:var(--giallo);}
   /* conto alla rovescia di preparazione */
@@ -172,6 +177,11 @@
   .rankrow .nm{flex:1; font-weight:600;}
   .rankrow .sc{font-family:'Anton',sans-serif; font-size:19px; color:var(--oro);}
   .rankrow.first{background:rgba(245,184,0,.16); border-color:var(--giallo);}
+  .poste{display:flex; justify-content:space-between; align-items:center;
+    background:rgba(255,255,255,.05); border:1px solid #000; border-radius:9px;
+    padding:6px 11px; margin:4px 0; font-size:13px;}
+  .poste b{font-family:'Anton',sans-serif; font-size:17px; color:var(--oro);}
+
   .turnwho{text-align:center; font-family:'Anton',sans-serif; font-size:15px; color:var(--giallo);
     letter-spacing:.5px; margin-bottom:6px;}
   .miniscore{display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:8px;}
@@ -213,9 +223,9 @@
   /* schermata di avvio: monete, firma, animazioni */
   #coinsCanvas{position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none;}
   .overlay .panel{position:relative; z-index:2; background:rgba(10,10,12,.82);
-    border-radius:20px; padding:22px 18px; backdrop-filter:blur(3px);}
+    border-radius:20px; padding:16px 15px; backdrop-filter:blur(3px);}
   .overlay .panel .rules, .overlay .panel .box{position:relative;}
-  .sign{margin-top:18px; font-size:12px; opacity:.45; line-height:1.5;}
+  .sign{margin-top:12px; font-size:11px; opacity:.45; line-height:1.45;}
   .sign b{color:var(--giallo); opacity:.9;}
   .sign span{font-size:10.5px; opacity:.8;}
   @keyframes logoIn{
@@ -244,24 +254,27 @@
   .dossier .t{opacity:.6; letter-spacing:.3px;}
   .dossier .v{font-weight:600;}
   .dossier .v.g{color:#7ee08f;} .dossier .v.r{color:#ff8a82;}
+  .dossier .alert{color:#ffb44d; font-weight:600;}
+  .dossier .good{color:#7ee08f; font-weight:600;}
 
   /* tutorial */
-  .dots{display:flex; gap:7px; justify-content:center; margin:14px 0 10px;}
+  .dots{display:flex; gap:7px; justify-content:center; margin:10px 0 8px;}
   .dots span{width:8px;height:8px;border-radius:50%;background:#4a4a52;transition:all .2s;}
   .dots span.on{background:var(--giallo); width:20px; border-radius:5px;}
   .skip{display:block; width:100%; margin-top:10px; background:none; border:none; color:var(--panna);
     opacity:.5; font-family:'Fredoka'; font-size:13px; cursor:pointer; text-decoration:underline;}
-  .tstep h2{font-family:'Anton',sans-serif; font-size:24px; color:var(--giallo); margin-bottom:10px; letter-spacing:.5px;}
-  .tstep .big-ic{font-size:46px; margin-bottom:8px;}
-  .tstep .box{background:var(--antracite); border:1px solid #000; border-radius:14px; padding:14px 16px;
-    text-align:left; font-size:13.5px; line-height:1.6; margin-top:12px;}
+  .tstep h2{font-family:'Anton',sans-serif; font-size:21px; color:var(--giallo); margin-bottom:7px; letter-spacing:.5px;}
+  .tstep .big-ic{font-size:38px; margin-bottom:5px;}
+  .tstep .box{background:var(--antracite); border:1px solid #000; border-radius:13px; padding:11px 13px;
+    text-align:left; font-size:12.5px; line-height:1.5; margin-top:9px;}
   .tstep .box b{color:var(--giallo);}
-  .tstep .row{display:flex; align-items:center; gap:10px; margin:8px 0;}
-  .tstep .row .k{flex:none; width:30px;height:30px;border-radius:50%; display:flex;align-items:center;
+  .tstep .row{display:flex; align-items:flex-start; gap:9px; margin:7px 0; line-height:1.4;}
+  .tstep .row .k{flex:none; width:26px;height:26px;border-radius:50%; display:flex;align-items:center;
     justify-content:center; font-size:15px; font-weight:700;}
   .tstep .k.g{background:var(--verde);} .tstep .k.r{background:var(--rosso);} .tstep .k.o{background:var(--oro); color:#000;}
-  .tstep .persona{display:flex; gap:8px; align-items:flex-start; margin:9px 0; font-size:13px; text-align:left;}
-  .tstep .persona .f{font-size:22px; flex:none;}
+  .tstep .persona{display:flex; gap:8px; align-items:flex-start; margin:7px 0; font-size:12.5px; text-align:left; line-height:1.45;}
+  .tstep .persona .f{flex:none; width:7px; height:7px; border-radius:50%; background:var(--giallo);
+    margin-top:6px; font-size:0; overflow:hidden;}
   .final-score{font-family:'Anton',sans-serif; font-size:20px; margin:8px 0;}
   .final-score .big{font-size:50px; display:block; color:var(--giallo);}
   .hidden{display:none !important;}
@@ -294,7 +307,7 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · v2.5<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · v2.9<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
 <div class="overlay" id="modeOverlay">
@@ -315,7 +328,7 @@
       <span class="mt"><b>IN DUE + BANCO</b><span>2 giocatori + il Banco come terzo sfidante</span></span>
     </button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span id="signVer">v2.5 · © 2026 · tutti i diritti riservati</span></div>
+      <span id="signVer">v2.9 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -327,7 +340,7 @@
     <button class="cta" id="startBtn">AVANTI</button>
     <button class="skip" id="skipBtn">salta e gioca</button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span>v2.5 · © 2026 · tutti i diritti riservati</span></div>
+      <span>v2.9 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -1375,7 +1388,7 @@ const UNSURE=["Uhm, non vorrei sbagliare…","Questa mi frega, forse.","Categori
 const TOT=10, START=15, TIME=15;
 let deck=[], turn=0, me=START, bank=START, current=null, role=null, persona=null, stake=2;
 let timerId=null, timeLeft=0, lastTick=0;
-let bankHits=0, bankMiss=0, bankBetsW=0, bankBetsG=0;   // storico per indizi sul carattere
+let bankHits=0, bankMiss=0, bankBetsW=0, bankBetsG=0, bankEasyMiss=0, bankHardHit=0;   // storico per indizi sul carattere
 let aiutiRimasti=0, aiutoUsatoOra=false;
 const seen = new Set();   // domande già uscite: evita ripetizioni tra partite
 
@@ -1474,7 +1487,7 @@ function startGame(){
   deck = shuffle(pool).slice(0,TOT);
   deck.forEach(x=>seen.add(x.q));
   turn=0; me=START; bank=START;
-  bankHits=0; bankMiss=0; bankBetsW=0; bankBetsG=0;
+  bankHits=0; bankMiss=0; bankBetsW=0; bankBetsG=0; bankEasyMiss=0; bankHardHit=0;
   aiutiRimasti=aiutiDisponibili();
   persona=PERSONAS[pick(Object.keys(PERSONAS))];   // carattere nascosto
   if(persona.materie){
@@ -1523,14 +1536,24 @@ function bankSay(list, sub){
 }
 
 function renderDossier(){
-  const tot=bankHits+bankMiss;
-  if(tot===0 && bankBetsW+bankBetsG===0){
+  const tot=bankHits+bankMiss, tb=bankBetsW+bankBetsG;
+  if(tot===0 && tb===0){
     $('dossier').innerHTML=`<div class="dossier"><span class="t">🕵️ Identikit del Banco: ancora nessun indizio…</span></div>`;
     return;
   }
-  let parts=`<span class="t">🕵️ Banco finora:</span>`;
-  if(tot>0) parts+=`<span><span class="t">risposte</span> <span class="v g">${bankHits}✓</span> <span class="v r">${bankMiss}✗</span></span>`;
-  if(bankBetsW+bankBetsG>0) parts+=`<span><span class="t">punta contro di te</span> <span class="v">${bankBetsW}/${bankBetsW+bankBetsG}</span></span>`;
+  let parts=`<span class="t">🕵️</span>`;
+  if(tot>0){
+    parts+=`<span><span class="t">risponde</span> <span class="v g">${bankHits}✓</span> <span class="v r">${bankMiss}✗</span>`;
+    // il dato che conta: ha sbagliato domande FACILI?
+    if(bankEasyMiss>0) parts+=` <span class="alert">${bankEasyMiss} facil${bankEasyMiss>1?'i':'e'} sbagliat${bankEasyMiss>1?'e':'a'}!</span>`;
+    if(bankHardHit>0)  parts+=` <span class="good">${bankHardHit} tost${bankHardHit>1?'e':'a'} indovinat${bankHardHit>1?'e':'a'}</span>`;
+    parts+=`</span>`;
+  }
+  if(tb>0){
+    const pct=Math.round(bankBetsW/tb*100);
+    const tono = pct>=65 ? 'alert' : (pct<=35 ? 'good' : 'v');
+    parts+=`<span><span class="t">punta contro di te</span> <span class="${tono}">${bankBetsW}/${tb}</span></span>`;
+  }
   $('dossier').innerHTML=`<div class="dossier">${parts}</div>`;
 }
 
@@ -1544,7 +1567,7 @@ function nextTurn(){
   $('roleLabel').textContent=role==='RISPONDENTE'?'🎤 Rispondi tu':'🎯 Scommetti tu';
   const card=$('card'), rib=$('cardRibbon');
   card.className='card q'; rib.className='ribbon'; rib.style.background=''; rib.textContent='CHI SBAGLIA PAGA';
-  $('cardCat').textContent=current.cat; $('cardText').textContent=current.q; $('hint').textContent='';
+  $('cardCat').innerHTML=current.cat+badgeDiff(current.diff); $('cardText').textContent=current.q; $('hint').textContent='';
   renderDossier();
   if(role==='RISPONDENTE') renderAnswer(); else renderBet();
 }
@@ -1644,7 +1667,8 @@ function renderBet(){
   $('hint').textContent='Categoria: '+current.cat+' — scegli la posta e scommetti.';
   startTimer(()=>{  // tempo scaduto = puntata persa
     [...box.children].forEach(b=>b.disabled=true);
-    if(bankCorrect) bankHits++; else bankMiss++;
+    if(bankCorrect){ bankHits++; if(current.diff>0.45) bankHardHit++; }
+    else { bankMiss++; if(current.diff<=0.25) bankEasyMiss++; }
     revealBankAnswer(bankCorrect);
     let dBank = bankCorrect? 0 : -2;
     $('bankSayBox').innerHTML='';
@@ -1654,7 +1678,8 @@ function renderBet(){
 }
 function resolveBet(betGiusto,bankCorrect){
   stopTimer();
-  if(bankCorrect) bankHits++; else bankMiss++;
+  if(bankCorrect){ bankHits++; if(current.diff>0.45) bankHardHit++; }
+  else { bankMiss++; if(current.diff<=0.25) bankEasyMiss++; }
   revealBankAnswer(bankCorrect);
   const win=(betGiusto===bankCorrect);
   let dMe = win? +stake : -stake;
@@ -1666,13 +1691,13 @@ function resolveBet(betGiusto,bankCorrect){
 }
 
 function revealSolution(playerCorrect){
-  const card=$('card'), rib=$('cardRibbon'); card.className='card a'; $('cardCat').textContent=current.cat;
+  const card=$('card'), rib=$('cardRibbon'); card.className='card a'; $('cardCat').innerHTML=current.cat+badgeDiff(current.diff);
   if(playerCorrect){ rib.className='ribbon correct'; rib.style.background=''; rib.textContent='HAI RISPOSTO GIUSTO ✓'; }
   else { rib.className='ribbon'; rib.style.background='var(--rosso)'; rib.textContent='HAI SBAGLIATO ✗'; }
   $('cardText').innerHTML=col([['La risposta giusta era',.6,13,400,null],[current.a,1,24,600,'var(--giallo)']],current.detail);
 }
 function revealBankAnswer(bankCorrect){
-  const card=$('card'), rib=$('cardRibbon'); card.className='card a'; $('cardCat').textContent=current.cat;
+  const card=$('card'), rib=$('cardRibbon'); card.className='card a'; $('cardCat').innerHTML=current.cat+badgeDiff(current.diff);
   const said = bankCorrect? current.a : pick(current.wrong);
   if(bankCorrect){ rib.className='ribbon correct'; rib.style.background=''; rib.textContent='IL BANCO HA INDOVINATO ✓';
     $('cardText').innerHTML=col([['Il Banco ha risposto',.6,13,400,null],[said,1,24,600,'var(--verde)']],current.detail);
@@ -1760,7 +1785,7 @@ function endGame(){
    MODALITÀ TRA AMICI (pass-and-play): un solo telefono che gira
    ============================================================ */
 let PG=[], pgScores=[], pgTurn=0, pgRounds=12, pgDeck=[], pgCur=null;
-let pgResp=0, pgBets={}, pgBetIdx=0, pgOrder=[], pgStake={};
+let pgResp=0, pgBets={}, pgBetIdx=0, pgOrder=[], pgStake={}, pgRespStake=2;
 
 function pgShow(id){ ['modeOverlay','startOverlay','partyTuto','partySetup','passOverlay','partyEnd','endOverlay']
   .forEach(x=>$(x).classList.add('hidden')); if(id) $(id).classList.remove('hidden'); }
@@ -1822,8 +1847,56 @@ function pgNextTurn(){
   pgCur=pgDeck[pgTurn];
   pgResp=pgTurn % PG.length;                 // il ruolo di Rispondente ruota
   pgOrder=PG.map((_,i)=>i).filter(i=>i!==pgResp);
-  pgBets={}; pgStake={}; pgBetIdx=0;
-  pgAskBet();
+  pgBets={}; pgStake={}; pgBetIdx=0; pgRespStake=2;
+  // 1) prima il RISPONDENTE legge la domanda e dichiara la sua posta
+  if(duoMode && pgResp===2){ duoRespPunta(); return pgAskBet(); }
+  pgAskRespStake();
+}
+
+/* il Banco, quando è Rispondente in modalità duo, sceglie la posta da solo */
+function duoRespPunta(){
+  const conf=Math.abs((1-pgCur.diff)-0.5)*2;
+  pgRespStake = conf<0.3 ? 1 : (conf<0.6 ? 2 : 3);
+}
+
+/* schermata 1: il Rispondente legge la domanda (senza risposte) e sceglie la posta */
+function pgAskRespStake(){
+  pgShow('passOverlay');
+  $('passTitle').textContent='PASSA A '+PG[pgResp].toUpperCase();
+  $('passMsg').innerHTML=`Tocca a <b>${PG[pgResp]}</b>: leggi la domanda e dichiara quanto ci credi.`;
+  $('passBox').innerHTML=`Vedrai la domanda ma <b>non le risposte</b>.<br>
+    Gli altri ti guardano: la tua posta sarà <b>pubblica</b>, le loro scommesse no.`;
+  $('passBtn').textContent='SONO '+PG[pgResp].toUpperCase();
+  $('passBtn').onclick=()=>pgRespStakeScreen();
+}
+
+function pgRespStakeScreen(){
+  pgShow(null); scoreboardVisibile(false);
+  $('roleLabel').textContent='🎤 Legge '+PG[pgResp];
+  $('turnNo').textContent=pgTurn+1; $('turnTot').textContent=pgRounds;
+  pgHeader(pgResp);
+  $('prompt').innerHTML=`<b>${PG[pgResp]}</b> legge ad alta voce. Quanto ci credi?`;
+  $('bankSayBox').innerHTML='';
+  const card=$('card'), rib=$('cardRibbon');
+  card.className='card q'; rib.className='ribbon'; rib.style.background='';
+  rib.textContent='CHI SBAGLIA PAGA';
+  $('cardCat').innerHTML=pgCur.cat+badgeDiff(pgCur.diff); $('cardText').textContent=pgCur.q;
+  $('timerBox').innerHTML='';
+  const wrap=document.createElement('div');
+  const sd=document.createElement('div'); sd.className='stake';
+  sd.innerHTML='<span class="lbl">Ci credo:</span>';
+  const amt=document.createElement('div'); amt.className='amt';
+  [1,2,3].forEach(v=>{ const b=document.createElement('button'); b.textContent=v;
+    if(v===pgRespStake)b.classList.add('on');
+    b.onclick=()=>{ SFX.tap(); pgRespStake=v; [...amt.children].forEach(c=>c.classList.toggle('on',+c.textContent===v)); };
+    amt.appendChild(b); });
+  sd.appendChild(amt); wrap.appendChild(sd);
+  const go=document.createElement('button'); go.className='cta'; go.style.marginTop='10px';
+  go.textContent='HO DECISO, PASSA IL TELEFONO';
+  go.onclick=()=>{ SFX.tap(); pgAskBet(); };
+  wrap.appendChild(go);
+  $('controls').innerHTML=''; $('controls').appendChild(wrap);
+  $('hint').textContent='Non vedi le risposte: dichiara solo quanto ti senti sicuro.';
 }
 
 /* ogni Puntatore inserisce di nascosto la sua scommessa */
@@ -1840,7 +1913,8 @@ function pgAskBet(){
   pgShow('passOverlay');
   $('passTitle').textContent='PASSA A '+PG[p].toUpperCase();
   $('passMsg').innerHTML=`Solo <b>${PG[p]}</b> deve guardare lo schermo.`;
-  $('passBox').innerHTML=`Devi scommettere sulla risposta di <b>${PG[pgResp]}</b>.<br>
+  $('passBox').innerHTML=`Devi scommettere sulla risposta di <b>${PG[pgResp]}</b>,
+    che ha dichiarato posta <b style="color:var(--oro)">${pgRespStake}</b>.<br>
     Categoria: <b>${pgCur.cat}</b>`;
   $('passBtn').textContent='SONO '+PG[p].toUpperCase();
   $('passBtn').onclick=()=>pgBetScreen(p);
@@ -1851,12 +1925,12 @@ function pgBetScreen(p){
   $('roleLabel').textContent='🎯 Punta '+PG[p];
   $('turnNo').textContent=pgTurn+1; $('turnTot').textContent=pgRounds;
   pgHeader(p);
-  $('prompt').innerHTML=`<b>${PG[pgResp]}</b> deve rispondere. Indovinerà?`;
+  $('prompt').innerHTML=`<b>${PG[pgResp]}</b> ha dichiarato posta <b style="color:var(--oro)">${pgRespStake}</b>. Indovinerà?`;
   $('bankSayBox').innerHTML=''; $('dossier').innerHTML='';
   const card=$('card'), rib=$('cardRibbon');
   card.className='card q'; rib.className='ribbon'; rib.style.background='';
   rib.textContent='CHI SBAGLIA PAGA';
-  $('cardCat').textContent=pgCur.cat; $('cardText').textContent=pgCur.q;
+  $('cardCat').innerHTML=pgCur.cat+badgeDiff(pgCur.diff); $('cardText').textContent=pgCur.q;
 
   let st=2;
   const wrap=document.createElement('div');
@@ -1880,11 +1954,16 @@ function pgBetScreen(p){
 /* tocca al Rispondente */
 function pgAskAnswer(){
   pgShow('passOverlay');
-  $('passTitle').textContent='PASSA A '+PG[pgResp].toUpperCase();
+  $('passTitle').textContent='TORNA A '+PG[pgResp].toUpperCase();
   $('passMsg').innerHTML=`Tutti hanno puntato. Tocca a <b>${PG[pgResp]}</b> rispondere.`;
-  $('passBox').innerHTML=`Hai <b>15 secondi</b>. Scegli quanto ci credi, poi rispondi.<br>
-    Guadagni solo se qualcuno aveva scommesso che sbagliavi!`;
-  $('passBtn').textContent='SONO '+PG[pgResp].toUpperCase();
+  // mostra QUANTO hanno puntato gli altri (non su cosa)
+  const righe = pgOrder.map(p=>
+    `<div class="poste"><span>${PG[p]}</span><b>${pgStake[p]||2}</b></div>`).join('');
+  $('passBox').innerHTML=`<div style="opacity:.7;font-size:12px;margin-bottom:6px">Le poste in gioco contro di te:</div>
+    ${righe}
+    <div style="opacity:.7;font-size:11.5px;margin-top:8px">Non sai <b>su cosa</b> hanno puntato, solo quanto rischiano.<br>
+    Ora hai <b>15 secondi</b> per rispondere.</div>`;
+  $('passBtn').textContent='SONO PRONTO';
   $('passBtn').onclick=()=>pgAnswerScreen();
 }
 
@@ -1897,40 +1976,6 @@ function pgHeader(active){
   $('dossier').innerHTML=`<div class="miniscore">${ms}</div>`;
 }
 
-function pgAnswerScreen(){
-  pgShow(null); scoreboardVisibile(false);
-  $('roleLabel').textContent='🎤 Risponde '+PG[pgResp];
-  pgHeader(pgResp);
-  $('prompt').innerHTML=`<b>${PG[pgResp]}</b>, tocca a te. Quanto ci credi?`;
-  const card=$('card'), rib=$('cardRibbon');
-  card.className='card q'; rib.className='ribbon'; rib.style.background='';
-  rib.textContent='CHI SBAGLIA PAGA';
-  $('cardCat').textContent=pgCur.cat; $('cardText').textContent=pgCur.q;
-
-  let st=2;
-  const wrap=document.createElement('div');
-  const sd=document.createElement('div'); sd.className='stake';
-  sd.innerHTML='<span class="lbl">Ci credo:</span>';
-  const amt=document.createElement('div'); amt.className='amt';
-  [1,2,3].forEach(v=>{ const b=document.createElement('button'); b.textContent=v; if(v===st)b.classList.add('on');
-    b.onclick=()=>{ SFX.tap(); st=v; [...amt.children].forEach(c=>c.classList.toggle('on',+c.textContent===v)); };
-    amt.appendChild(b); });
-  sd.appendChild(amt); wrap.appendChild(sd);
-  const opts=shuffle([pgCur.a,...pgCur.wrong]);
-  const box=document.createElement('div'); box.className='options';
-  opts.forEach(o=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=o;
-    b.onclick=()=>{ SFX.tap(); pgResolve(o===pgCur.a, st, b, box); }; box.appendChild(b); });
-  wrap.appendChild(box);
-  $('controls').innerHTML=''; $('controls').appendChild(wrap);
-  $('hint').textContent='Scegli la posta, poi rispondi.';
-  // conto alla rovescia di preparazione: il tempo parte solo quando sei pronto
-  countdown(3, ()=>{
-    startTimer(()=>{
-      [...box.children].forEach(b=>{ b.disabled=true; if(b.textContent===pgCur.a) b.classList.add('correct'); });
-      SFX.timeout(); pgResolve(false, st, null, box, true);
-    });
-  });
-}
 
 /* conto alla rovescia a schermo prima di far partire il tempo */
 let cdTimer=null;
@@ -1953,6 +1998,31 @@ function countdown(n, done){
       setTimeout(()=>{ ov.remove(); done(); }, 450);
     }
   }, 800);
+}
+
+function pgAnswerScreen(){
+  pgShow(null); scoreboardVisibile(false);
+  $('roleLabel').textContent='🎤 Risponde '+PG[pgResp];
+  pgHeader(pgResp);
+  $('prompt').innerHTML=`<b>${PG[pgResp]}</b>, hai dichiarato posta <b style="color:var(--oro)">${pgRespStake}</b>. Rispondi!`;
+  const card=$('card'), rib=$('cardRibbon');
+  card.className='card q'; rib.className='ribbon'; rib.style.background='';
+  rib.textContent='CHI SBAGLIA PAGA';
+  $('cardCat').innerHTML=pgCur.cat+badgeDiff(pgCur.diff); $('cardText').textContent=pgCur.q;
+
+  const st=pgRespStake;
+  const opts=shuffle([pgCur.a,...pgCur.wrong]);
+  const box=document.createElement('div'); box.className='options';
+  opts.forEach(o=>{ const b=document.createElement('button'); b.className='opt'; b.textContent=o;
+    b.onclick=()=>{ SFX.tap(); pgResolve(o===pgCur.a, st, b, box); }; box.appendChild(b); });
+  $('controls').innerHTML=''; $('controls').appendChild(box);
+  $('hint').textContent='Tocca la risposta che credi giusta.';
+  countdown(3, ()=>{
+    startTimer(()=>{
+      [...box.children].forEach(b=>{ b.disabled=true; if(b.textContent===pgCur.a) b.classList.add('correct'); });
+      SFX.timeout(); pgResolve(false, st, null, box, true);
+    });
+  });
 }
 
 function pgResolve(correct, st, btn, box, timeout){
@@ -1980,7 +2050,7 @@ function pgResolve(correct, st, btn, box, timeout){
   const card=$('card'), rib=$('cardRibbon'); card.className='card a';
   if(correct){ rib.className='ribbon correct'; rib.style.background=''; rib.textContent=PG[pgResp].toUpperCase()+' HA RISPOSTO GIUSTO ✓'; }
   else { rib.className='ribbon'; rib.style.background='var(--rosso)'; rib.textContent=(timeout?'TEMPO SCADUTO ✗':PG[pgResp].toUpperCase()+' HA SBAGLIATO ✗'); }
-  $('cardCat').textContent=pgCur.cat;
+  $('cardCat').innerHTML=pgCur.cat+badgeDiff(pgCur.diff);
   $('cardText').innerHTML=col([['La risposta giusta era',.6,13,400,null],[pgCur.a,1,24,600,'var(--giallo)']],pgCur.detail);
 
   const res=document.createElement('div'); res.className='result '+(correct?'win':'lose');
@@ -2069,17 +2139,18 @@ function duoBancoRisponde(){
 
 /* schermata: il Banco risponde, i due umani hanno già puntato */
 function duoBancoTurno(){
-  const [ok, postaB] = duoBancoRisponde();
+  const [ok, ignora] = duoBancoRisponde();
+  const postaB = pgRespStake;   // posta già dichiarata a inizio turno
   pgShow(null); scoreboardVisibile(false);
   $('roleLabel').textContent='🎩 Risponde il Banco';
   $('turnNo').textContent=pgTurn+1; $('turnTot').textContent=pgRounds;
   pgHeader(2);
-  $('prompt').innerHTML=`Tocca al <b>Banco</b>. Avete puntato entrambi: vediamo…`;
+  $('prompt').innerHTML=`Il <b>Banco</b> aveva dichiarato posta <b style="color:var(--oro)">${pgRespStake}</b>. Vediamo…`;
   bankSay(SAYS_ANSWER);
   const card=$('card'), rib=$('cardRibbon');
   card.className='card q'; rib.className='ribbon'; rib.style.background='';
   rib.textContent='CHI SBAGLIA PAGA';
-  $('cardCat').textContent=pgCur.cat; $('cardText').textContent=pgCur.q;
+  $('cardCat').innerHTML=pgCur.cat+badgeDiff(pgCur.diff); $('cardText').textContent=pgCur.q;
   $('timerBox').innerHTML='';
   $('controls').innerHTML='';
   const attesa=document.createElement('div');
@@ -2192,6 +2263,22 @@ function renderPStep(){
   $('ptDots').innerHTML=PSTEPS.map((_,i)=>`<span class="${i===pstep?'on':''}"></span>`).join('');
   $('ptNext').textContent=(pstep===PSTEPS.length-1)?'SCEGLI I GIOCATORI':'AVANTI';
   $('ptSkip').style.display=(pstep===PSTEPS.length-1)?'none':'block';
+}
+
+
+/* indicatore di difficoltà: dà al giocatore il metro per giudicare il Banco */
+function livelloDiff(d){
+  if(d<=0.25) return {n:1, lab:'FACILE',    col:'#3DA35D'};
+  if(d<=0.45) return {n:2, lab:'MEDIA',     col:'#F5B800'};
+  return                 {n:3, lab:'TOSTA', col:'#D7261D'};
+}
+function badgeDiff(d){
+  const L=livelloDiff(d);
+  let pallini='';
+  for(let i=1;i<=3;i++){
+    pallini += `<span class="dp" style="background:${i<=L.n?L.col:'rgba(255,255,255,.18)'}"></span>`;
+  }
+  return `<span class="diffb" style="color:${L.col}">${pallini}<b>${L.lab}</b></span>`;
 }
 
 /* ---------- AUDIO: suoni brevi generati, nessun file esterno ---------- */
@@ -2318,7 +2405,11 @@ const STEPS = [
      <div class="persona"><span class="f">•</span><span><b>Lunatico</b> — un turno geniale e uno disastroso.</span></div>
      <div class="persona"><span class="f">•</span><span><b>Specialista</b> — fortissimo in certe categorie, pessimo in altre: guarda di che materia è la domanda.</span></div>
      <div class="persona"><span class="f">•</span><span><b>Opportunista</b> — ti punta contro quando sei in vantaggio: tieni d'occhio il punteggio.</span></div>
-     <div style="opacity:.7;margin-top:8px">Aspetto e frasi sono <b>sempre uguali</b> per tutti: l'unico indizio è l'<b>identikit</b> in alto. Scoprirai chi era solo a fine partita.</div>
+     <div style="opacity:.7;margin-top:8px">Aspetto e frasi sono <b>sempre uguali</b> per tutti.<br>
+     Usa i due strumenti che hai: la <b style="color:var(--giallo)">difficoltà</b> di ogni domanda
+     (facile / media / tosta, accanto alla categoria) e l'<b>identikit</b> in alto, che segnala
+     se il Banco ha sbagliato domande <b>facili</b> o indovinato quelle <b>toste</b>.
+     Scoprirai chi era solo a fine partita.</div>
    </div>`},
 
  {html:`<div class="big-ic">⏱️</div><h2>HAI 15 SECONDI</h2>
