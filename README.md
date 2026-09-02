@@ -23,9 +23,17 @@ e ingannarli quando tocca a te.
 
 Il ruolo si alterna a ogni turno.
 
-- **Da Rispondente** — scegli quanto ci credi (posta 1, 2 o 3) e rispondi entro **15 secondi**.
-  Gli avversari hanno già piazzato le loro scommesse, coperte.
-- **Da Puntatore** — scegli la posta e scommetti se il Rispondente **indovinerà** o **sbaglierà**.
+**Nelle modalità multigiocatore** l'ordine è questo:
+
+1. Il **Rispondente** legge la domanda ad alta voce — vede la domanda ma non le risposte — e
+   dichiara pubblicamente **quanto ci crede** (posta 1, 2 o 3), mentre gli altri lo guardano in faccia.
+2. Gli altri, uno alla volta e **di nascosto**, scelgono la propria posta e scommettono se
+   **indovinerà** o **sbaglierà**.
+3. Il Rispondente vede **quanto** hanno puntato gli altri (non su cosa) e ha **15 secondi**
+   per rispondere davanti a tutti.
+
+Nella Sfida al Banco, dove il telefono resta in mano a te, scegli la posta e rispondi
+direttamente entro 15 secondi.
 
 ### Punteggio
 
