@@ -322,7 +322,7 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · v3.3<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · v3.4<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
 <div class="overlay hidden" id="exitOverlay">
@@ -353,7 +353,7 @@
       <span class="mt"><b>IN DUE + BANCO</b><span>2 giocatori + il Banco come terzo sfidante</span></span>
     </button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span id="signVer">v3.3 · © 2026 · tutti i diritti riservati</span></div>
+      <span id="signVer">v3.4 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -368,7 +368,7 @@
     </div>
     <button class="skip" id="skipBtn">salta e gioca</button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span>v3.3 · © 2026 · tutti i diritti riservati</span></div>
+      <span>v3.4 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -2311,7 +2311,7 @@ function renderPStep(){
   $('ptDots').innerHTML=PSTEPS.map((_,i)=>`<span class="${i===pstep?'on':''}"></span>`).join('');
   $('ptNext').textContent=(pstep===PSTEPS.length-1)?'SCEGLI I GIOCATORI':'AVANTI';
   $('ptSkip').style.display=(pstep===PSTEPS.length-1)?'none':'block';
-  $('ptBack').disabled=(pstep===0);
+  $('ptBack').textContent = (pstep===0) ? '‹ Menu' : '‹ Indietro';
 }
 
 
@@ -2492,7 +2492,7 @@ function renderStep(){
   $('dots').innerHTML=STEPS.map((_,i)=>`<span class="${i===step?'on':''}"></span>`).join('');
   $('startBtn').textContent = (step===STEPS.length-1)?'GIOCA':'AVANTI';
   $('skipBtn').style.display = (step===STEPS.length-1)?'none':'block';
-  $('startBack').disabled = (step===0);
+  $('startBack').textContent = (step===0) ? '‹ Menu' : '‹ Indietro';
 }
 /* --- navigazione tra le due modalità --- */
 $('modeSolo').onclick=()=>{ SFX.tap(); stopCoins2(); duoMode=false; pgShow('startOverlay'); step=0; renderStep(); startCoins(); };
@@ -2500,7 +2500,9 @@ $('modeParty').onclick=()=>{ SFX.tap(); stopCoins2(); duoMode=false; PG=[]; pste
 $('modeDuo').onclick=()=>{ SFX.tap(); stopCoins2(); PG=[]; duoSetup(); };
 $('ptNext').onclick=()=>{ SFX.tap(); if(pstep<PSTEPS.length-1){ pstep++; renderPStep(); } else partySetup(); };
 $('ptSkip').onclick=()=>partySetup();
-$('ptBack').onclick=()=>{ SFX.tap(); if(pstep>0){ pstep--; renderPStep(); } };
+$('ptBack').onclick=()=>{ SFX.tap();
+  if(pstep>0){ pstep--; renderPStep(); }
+  else { duoMode=false; PG=[]; pgShow('modeOverlay'); startCoins2(); } };
 $('partyBack').onclick=()=>{ pgShow('modeOverlay'); startCoins2(); };
 
 $('addPlayer').onclick=()=>{ if(PG.length<6){ PG.push(''); renderPlayers(); } };
@@ -2515,7 +2517,9 @@ document.querySelectorAll('#roundsSel button').forEach(b=>{
 
 $('startBtn').onclick=()=>{ SFX.tap(); if(step<STEPS.length-1){ step++; renderStep(); } else startGame(); };
 $('skipBtn').onclick=()=>startGame();
-$('startBack').onclick=()=>{ SFX.tap(); if(step>0){ step--; renderStep(); } };
+$('startBack').onclick=()=>{ SFX.tap();
+  if(step>0){ step--; renderStep(); }
+  else { stopCoins(); pgShow('modeOverlay'); startCoins2(); } };
 $('againBtn').onclick=()=>{ step=0; stopCoins(); startGame(); };
 $('soloMenu').onclick=()=>{ stopCoins(); pgShow('modeOverlay'); startCoins2(); };
 $('soundBtn').onclick=()=>{ audioOn=!audioOn; updateSoundBtn(); if(audioOn) SFX.tap(); };
