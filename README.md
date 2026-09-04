@@ -13,7 +13,9 @@ e ingannarli quando tocca a te.
 - **🎩 Sfida al Banco** — da solo contro il computer, 10 turni, con progressione a livelli,
   monete accumulate e categorie sbloccabili.
 - **👥 Tra amici** — da 3 a 6 giocatori con un solo telefono che gira al tavolo: le puntate
-  si inseriscono di nascosto e il bluff torna quello vero, guardandosi in faccia.
+  si inseriscono di nascosto e il bluff torna quello vero, guardandosi in faccia. Il numero
+  di turni proposto si adatta sempre al numero di giocatori, così nessuno risponde più
+  degli altri.
 - **🃏 In due + Banco** — 2 giocatori reali più il computer come terzo giocatore: risponde
   a turno, scommette e può vincere la partita.
 
@@ -34,6 +36,9 @@ Il ruolo si alterna a ogni turno.
 
 Nella Sfida al Banco, dove il telefono resta in mano a te, scegli la posta e rispondi
 direttamente entro 15 secondi.
+
+Ogni domanda mostra accanto alla categoria la sua **difficoltà** (facile / media / tosta):
+è l'indizio che aiuta a leggere sia le proprie scommesse sia il comportamento del Banco.
 
 ### Punteggio
 

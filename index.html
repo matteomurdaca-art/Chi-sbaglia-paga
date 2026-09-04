@@ -268,6 +268,8 @@
   .dichiara .dv{font-family:'Anton',sans-serif; font-size:24px; color:var(--oro); line-height:1;}
   .dichiara .dt{font-size:11.5px; opacity:.6; font-style:italic;}
 
+  .roundsnote{font-size:11px; opacity:.55; text-align:center; margin-top:5px;}
+
   .navrow{display:flex; gap:8px; align-items:stretch;}
   .navrow .cta{flex:1; margin-top:0;}
   .navback{flex:none; padding:0 16px; border-radius:16px; border:1px solid #000;
@@ -398,10 +400,9 @@
     <button class="addp" id="addPlayer">+ Aggiungi giocatore</button>
     <div class="stake" style="margin-top:14px">
       <span class="lbl">Turni:</span>
-      <div class="amt" id="roundsSel">
-        <button data-r="6">6</button><button data-r="12" class="on">12</button><button data-r="18">18</button>
-      </div>
+      <div class="amt" id="roundsSel"></div>
     </div>
+    <div id="roundsNote" class="roundsnote"></div>
     <button class="cta" id="partyStart" style="margin-top:14px">INIZIA</button>
     <button class="skip" id="partyBack">torna indietro</button>
   </div>
@@ -1830,6 +1831,25 @@ function pgShow(id){ ['modeOverlay','startOverlay','partyTuto','partySetup','pas
 /* la scoreboard Tu/Banco serve solo nella Sfida al Banco */
 function scoreboardVisibile(on){ $('scoreboard').style.display = on ? 'flex' : 'none'; }
 
+
+/* turni sempre multipli del numero di giocatori: nessuno risponde più volte degli altri */
+const TAVOLA_TURNI = {2:[6,10,14], 3:[6,12,18], 4:[8,12,16], 5:[10,15,20], 6:[12,18,24]};
+function renderRoundsOptions(){
+  const n = duoMode ? 3 : Math.max(2, PG.length);
+  const opzioni = TAVOLA_TURNI[n] || [n*2, n*4, n*6];
+  if(!opzioni.includes(pgRounds)) pgRounds = opzioni[1];
+  const box=$('roundsSel'); box.innerHTML='';
+  opzioni.forEach(v=>{
+    const b=document.createElement('button'); b.textContent=v; b.dataset.r=v;
+    if(v===pgRounds) b.classList.add('on');
+    b.onclick=()=>{ SFX.tap(); pgRounds=v;
+      [...box.children].forEach(c=>c.classList.toggle('on', +c.dataset.r===v)); };
+    box.appendChild(b);
+  });
+  const giri = pgRounds / n;
+  $('roundsNote').textContent = `${giri} ${giri>1?'turni':'turno'} a testa, nessuno risponde più degli altri`;
+}
+
 function renderPlayers(){
   const box=$('playerList'); box.innerHTML='';
   PG.forEach((nome,i)=>{
@@ -1846,6 +1866,7 @@ function renderPlayers(){
     box.appendChild(r);
   });
   $('addPlayer').style.display = (duoMode || PG.length>=6) ? 'none' : 'block';
+  renderRoundsOptions();
 }
 
 function partySetup(){
