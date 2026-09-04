@@ -324,7 +324,7 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · v3.5<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · v3.6<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
 <div class="overlay hidden" id="exitOverlay">
@@ -355,7 +355,7 @@
       <span class="mt"><b>IN DUE + BANCO</b><span>2 giocatori + il Banco come terzo sfidante</span></span>
     </button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span id="signVer">v3.5 · © 2026 · tutti i diritti riservati</span></div>
+      <span id="signVer">v3.6 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -370,7 +370,7 @@
     </div>
     <button class="skip" id="skipBtn">salta e gioca</button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span>v3.5 · © 2026 · tutti i diritti riservati</span></div>
+      <span>v3.6 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -432,8 +432,7 @@
 <div class="overlay hidden" id="endOverlay">
   <div class="panel">
     <div id="endTitle" class="biglogo"><span class="b">FINE</span></div>
-    <div class="final-score">Tu <span class="big" id="endMe">0</span></div>
-    <div class="final-score" style="font-size:16px;opacity:.8">Banco <span id="endBank">0</span></div>
+    <div id="endScores"></div>
     <p id="endMsg"></p>
     <p id="endReveal" style="opacity:.7;font-size:13px"></p>
     <div id="endProgress"></div>
@@ -1327,7 +1326,7 @@ const SPECIALI = [
  {cat:"CALCIO", q:"Chi ha segnato la 'mano de Dios'?", a:"Maradona", detail:"1986", wrong:["Pelé", "Zico", "Platini"], diff:0.2, special:true},
  {cat:"CALCIO", q:"Quale squadra gioca al Camp Nou?", a:"Barcellona", detail:"", wrong:["Real Madrid", "Atletico", "Siviglia"], diff:0.15, special:true},
  {cat:"CALCIO", q:"Quanti giocatori titolari ha una squadra di calcio?", a:"11", detail:"", wrong:["10", "12", "9"], diff:0.1, special:true},
- {cat:"CALCIO", q:"Chi era il capitano della Roma per oltre 20 anni?", a:"Francesco Totti", detail:"", wrong:["De Rossi", "Candela", "Perrotta"], diff:0.15, special:true},
+ {cat:"CALCIO", q:"Chi è stato il capitano della Roma per oltre 20 anni?", a:"Francesco Totti", detail:"", wrong:["De Rossi", "Candela", "Perrotta"], diff:0.15, special:true},
  {cat:"CALCIO", q:"Quale trofeo vince il capocannoniere europeo?", a:"Scarpa d'Oro", detail:"", wrong:["Pallone d'Oro", "Golden Boy", "Fifa The Best"], diff:0.3, special:true},
  {cat:"CALCIO", q:"In quale anno il Milan ha vinto la Champions a Manchester?", a:"2003", detail:"contro la Juventus", wrong:["2007", "1994", "1990"], diff:0.55, special:true},
  {cat:"CALCIO", q:"Quale nazionale ha vinto Euro 2024?", a:"Spagna", detail:"", wrong:["Inghilterra", "Francia", "Germania"], diff:0.35, special:true},
@@ -1766,7 +1765,15 @@ function applyDelta(dMe,dBank,win,title,sub){
 }
 
 function endGame(){
-  $('endMe').textContent=me; $('endBank').textContent=bank;
+  // il vincitore viene mostrato in grande, lo sconfitto in piccolo sotto
+  const vincitoreBanco = bank > me;
+  const nomeSu  = vincitoreBanco ? 'Banco' : 'Tu';
+  const puntiSu = vincitoreBanco ? bank : me;
+  const nomeGiu  = vincitoreBanco ? 'Tu' : 'Banco';
+  const puntiGiu = vincitoreBanco ? me : bank;
+  $('endScores').innerHTML =
+    `<div class="final-score">${nomeSu} <span class="big">${puntiSu}</span></div>`+
+    `<div class="final-score" style="font-size:16px;opacity:.8">${nomeGiu} ${puntiGiu}</div>`;
   const t=$('endTitle'); let msg='';
   const vittoria = me>bank;
   // premio: le monete guadagnate rispetto al Banco finiscono nel salvadanaio
