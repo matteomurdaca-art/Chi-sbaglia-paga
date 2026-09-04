@@ -324,7 +324,7 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · v3.6<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · v3.7<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
 <div class="overlay hidden" id="exitOverlay">
@@ -355,7 +355,7 @@
       <span class="mt"><b>IN DUE + BANCO</b><span>2 giocatori + il Banco come terzo sfidante</span></span>
     </button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span id="signVer">v3.6 · © 2026 · tutti i diritti riservati</span></div>
+      <span id="signVer">v3.7 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -370,7 +370,7 @@
     </div>
     <button class="skip" id="skipBtn">salta e gioca</button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span>v3.6 · © 2026 · tutti i diritti riservati</span></div>
+      <span>v3.7 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -2445,6 +2445,14 @@ const SFX = {
   timeout(){ beep(240,0.30,'sawtooth',0.16); },
   tap(){ beep(520,0.05,'sine',0.08); },
   start(){ beep(520,0.09,'triangle',0.16); beep(700,0.10,'triangle',0.16,0.08); beep(950,0.16,'triangle',0.14,0.17); },
+  jingle(){
+    // fanfara di apertura: DO-MI-SOL-DO con accordo finale
+    const n=[523.25, 659.25, 783.99, 1046.50];
+    n.forEach((f,i)=> beep(f, 0.20, 'triangle', 0.17, i*0.13));
+    // accordo finale (tre note insieme) + luccichio acuto
+    [523.25, 659.25, 783.99].forEach(f=> beep(f, 0.55, 'triangle', 0.13, 0.56));
+    beep(1568, 0.30, 'sine', 0.07, 0.60);
+  },
   endWin(){ [520,660,780,1040].forEach((f,i)=>beep(f,0.16,'triangle',0.18,i*0.13)); },
   endLose(){ [420,340,270,210].forEach((f,i)=>beep(f,0.20,'sawtooth',0.14,i*0.14)); },
   levelUp(){ [660,880,1100,1320,1760].forEach((f,i)=>beep(f,0.18,'triangle',0.20,i*0.10)); }
@@ -2670,6 +2678,20 @@ window.addEventListener('popstate', ()=>{
 
 updateSoundBtn();
 caricaProgresso();
+
+/* jingle di apertura: se il browser blocca l'audio, parte al primo tocco */
+function jingleApertura(){
+  const a = ac();
+  if(a && a.state === 'suspended'){
+    // audio bloccato: riprova al primo tocco dell'utente
+    const sbloccaEsuona = ()=>{ a.resume().then(()=>SFX.jingle()); 
+      document.removeEventListener('pointerdown', sbloccaEsuona); };
+    document.addEventListener('pointerdown', sbloccaEsuona, {once:true});
+  } else {
+    SFX.jingle();
+  }
+}
+setTimeout(jingleApertura, 350);   // lascia comparire il logo, poi suona
 document.querySelector('.app').style.visibility='hidden';   // all'avvio si vede solo il menu
 renderStep();
 startCoins2();
