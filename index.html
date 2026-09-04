@@ -120,6 +120,9 @@
   .result{text-align:center; padding:12px; border-radius:14px; font-weight:600; font-size:15px; animation:pop .4s ease;}
   .result.win{background:rgba(46,170,74,.18); border:1px solid var(--verde);}
   .result.lose{background:rgba(215,38,29,.18); border:1px solid var(--rosso);}
+  .deltabanco{font-size:13px; opacity:.85; margin-top:-2px; margin-bottom:4px;}
+  .deltabanco b{font-family:'Anton',sans-serif; font-size:16px;}
+
   .result .delta{font-family:'Anton',sans-serif; font-size:26px; display:block; margin-top:2px;}
   .result.win .delta{color:#7ee08f;} .result.lose .delta{color:#ff8a82;}
   @keyframes pop{from{transform:scale(.94);opacity:0;} to{transform:scale(1);opacity:1;}}
@@ -324,7 +327,7 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · v4.1<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · v4.2<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
 <div class="overlay hidden" id="exitOverlay">
@@ -355,7 +358,7 @@
       <span class="mt"><b>IN DUE + BANCO</b><span>2 giocatori + il Banco come terzo sfidante</span></span>
     </button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span id="signVer">v4.1 · © 2026 · tutti i diritti riservati</span></div>
+      <span id="signVer">v4.2 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -370,7 +373,7 @@
     </div>
     <button class="skip" id="skipBtn">salta e gioca</button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span>v4.1 · © 2026 · tutti i diritti riservati</span></div>
+      <span>v4.2 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -1157,7 +1160,7 @@ const QUESTIONS = [
  {cat:"MUSICA", q:"Chi ha cantato Il cielo in una stanza?", a:"Gino Paoli", detail:"", wrong:["Lucio Battisti", "Fabrizio De André", "Domenico Modugno"], diff:0.35},
  {cat:"MUSICA", q:"Quale strumento suona un violoncellista?", a:"Violoncello", detail:"", wrong:["Violino", "Contrabbasso", "Viola"], diff:0.1},
  {cat:"MUSICA", q:"Chi ha scritto la Nona Sinfonia?", a:"Beethoven", detail:"", wrong:["Mozart", "Schubert", "Mahler"], diff:0.25},
- {cat:"MUSICA", q:"Quale gruppo italiano ha cantato Vita spericolata?", a:"Vasco Rossi", detail:"è solista", wrong:["Pooh", "Litfiba", "Nomadi"], diff:0.3},
+ {cat:"MUSICA", q:"Chi ha cantato Vita spericolata?", a:"Vasco Rossi", detail:"1983", wrong:["Ligabue", "Piero Pelù", "Augusto Daolio"], diff:0.3},
  {cat:"MUSICA", q:"Quanti musicisti in un trio?", a:"3", detail:"", wrong:["2", "4", "5"], diff:0.1},
  {cat:"MUSICA", q:"Chi ha cantato Bohemian Rhapsody?", a:"Freddie Mercury", detail:"con i Queen", wrong:["Elton John", "David Bowie", "Robert Plant"], diff:0.2},
  {cat:"MUSICA", q:"Quale strumento ha 88 tasti?", a:"Pianoforte", detail:"", wrong:["Organo", "Fisarmonica", "Clavicembalo"], diff:0.25},
@@ -1283,7 +1286,7 @@ const SPECIALI = [
  {cat:"ANNI80-90", q:"Quale band grunge era guidata da Kurt Cobain?", a:"Nirvana", detail:"", wrong:["Pearl Jam", "Soundgarden", "Alice in Chains"], diff:0.2, special:true},
  {cat:"ANNI80-90", q:"Quale programma TV italiano lanciò il Drive In?", a:"Italia 1", detail:"", wrong:["Rai 1", "Canale 5", "Rete 4"], diff:0.5, special:true},
  {cat:"ANNI80-90", q:"Quale videogioco arcade ha un idraulico italiano?", a:"Super Mario Bros", detail:"", wrong:["Donkey Kong", "Pac-Man", "Sonic"], diff:0.15, special:true},
- {cat:"ANNI80-90", q:"Quale gruppo italiano cantava Gianna negli anni 80?", a:"Rino Gaetano", detail:"1978, celebre negli 80", wrong:["Vasco Rossi", "Pooh", "Ricchi e Poveri"], diff:0.45, special:true},
+ {cat:"ANNI80-90", q:"Chi cantava Gianna, tormentone di fine anni 70?", a:"Rino Gaetano", detail:"Sanremo 1978", wrong:["Vasco Rossi", "Lucio Dalla", "Edoardo Bennato"], diff:0.45, special:true},
  {cat:"ANNI80-90", q:"In che anno uscì il primo film di Ritorno al futuro?", a:"1985", detail:"", wrong:["1982", "1988", "1990"], diff:0.35, special:true},
  {cat:"ANNI80-90", q:"Quale serie TV aveva un'auto parlante di nome KITT?", a:"Supercar", detail:"Knight Rider", wrong:["A-Team", "MacGyver", "Hazzard"], diff:0.3, special:true},
  {cat:"ANNI80-90", q:"Quale cantante è noto come il Blasco?", a:"Vasco Rossi", detail:"", wrong:["Ligabue", "Zucchero", "Jovanotti"], diff:0.2, special:true},
@@ -1719,8 +1722,17 @@ function resolveBet(betGiusto,bankCorrect){
   let dBank = 0;
   if(!bankCorrect) dBank=-2; else if(!betGiusto) dBank=+1;
   $('bankSayBox').innerHTML='';
+  // spiego anche cosa succede AL BANCO, altrimenti il suo punteggio cambia senza motivo apparente
+  let esitoBanco;
+  if(bankCorrect){
+    esitoBanco = betGiusto
+      ? 'Il Banco ha risposto bene: nessun bonus, lo avevi previsto.'
+      : 'Il Banco ha risposto bene e ti ha ingannato: <b>+1</b> per lui.';
+  } else {
+    esitoBanco = 'Il Banco ha sbagliato: perde <b>2 monete</b> di penalità.';
+  }
   applyDelta(dMe,dBank,win, win?`Puntata azzeccata! (posta ${stake})`:`Puntata sbagliata (posta ${stake})`,
-    bankCorrect?'Il Banco ha risposto bene.':'Il Banco ha sbagliato.');
+    esitoBanco);
 }
 
 function revealSolution(playerCorrect){
@@ -1755,7 +1767,13 @@ function applyDelta(dMe,dBank,win,title,sub){
   (win ? SFX.win : SFX.lose)();
   const res=document.createElement('div'); res.className='result '+(win?'win':'lose');
   const sign=dMe>0?'+':'';
+  // mostra anche la variazione del Banco, così il suo punteggio non cambia "misteriosamente"
+  const segnoB = dBank>0?'+':'';
+  const rigaBanco = dBank!==0
+    ? `<div class="deltabanco">Banco <b style="color:${dBank>0?'#ff8a82':'#7ee08f'}">${segnoB}${dBank}</b></div>`
+    : '';
   res.innerHTML=`${title}<span class="delta">${sign}${dMe} ${Math.abs(dMe)===1?'moneta':'monete'}</span>
+    ${rigaBanco}
     <div style="font-size:12px;opacity:.75;font-weight:400;margin-top:2px">${sub}</div>`;
   $('controls').innerHTML=''; $('controls').appendChild(res);
   const btn=document.createElement('button'); btn.className='cta'; btn.style.marginTop='12px';
