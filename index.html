@@ -120,11 +120,14 @@
   .result{text-align:center; padding:12px; border-radius:14px; font-weight:600; font-size:15px; animation:pop .4s ease;}
   .result.win{background:rgba(46,170,74,.18); border:1px solid var(--verde);}
   .result.lose{background:rgba(215,38,29,.18); border:1px solid var(--rosso);}
+  .result.neutro{background:rgba(255,255,255,.07); border:1px solid #555;}
   .deltabanco{font-size:13px; opacity:.85; margin-top:-2px; margin-bottom:4px;}
   .deltabanco b{font-family:'Anton',sans-serif; font-size:16px;}
+  .deltabanco b.pos{color:#7ee08f;} .deltabanco b.neg{color:#ff8a82;}
 
   .result .delta{font-family:'Anton',sans-serif; font-size:26px; display:block; margin-top:2px;}
-  .result.win .delta{color:#7ee08f;} .result.lose .delta{color:#ff8a82;}
+  /* colori sempre coerenti: verde se guadagni, rosso se perdi, grigio se zero */
+  .delta.pos{color:#7ee08f;} .delta.neg{color:#ff8a82;} .delta.zero{color:#c8c8c8;}
   @keyframes pop{from{transform:scale(.94);opacity:0;} to{transform:scale(1);opacity:1;}}
 
   .cta{width:100%; border:none; border-radius:16px; padding:15px; font-family:'Anton',sans-serif; font-size:19px;
@@ -133,12 +136,14 @@
   .cta:active{transform:translateY(3px); box-shadow:0 2px 0 #17742f;}
   .footer{font-size:11px; text-align:center; opacity:.4; margin-top:10px;}
   .overlay{position:fixed; inset:0; background:rgba(5,5,7,.94); z-index:20; display:flex; align-items:center; justify-content:center; padding:24px;}
+  /* la conferma di uscita deve stare sopra a qualsiasi altra schermata */
+  #exitOverlay{z-index:50;}
   .panel{max-width:390px; width:100%; text-align:center;}
   .panel .biglogo{font-family:'Anton',sans-serif; line-height:.85; margin-bottom:14px;}
   .panel .biglogo .a{font-size:32px;color:#fff;-webkit-text-stroke:1.5px #000;}
   .panel .biglogo .b{font-size:52px;color:var(--giallo);-webkit-text-stroke:2px #000;}
   .panel .biglogo .c{font-size:40px;color:#fff;-webkit-text-stroke:1.5px #000;}
-  .panel p{opacity:.85; font-size:13px; line-height:1.45; margin-bottom:6px;}
+  .panel p{opacity:.9; font-size:15.5px; line-height:1.5; margin-bottom:8px;}
   .panel .rules{background:var(--antracite); border-radius:14px; padding:14px 16px; text-align:left; font-size:13px; line-height:1.6; margin:14px 0; border:1px solid #000;}
   .panel .rules b{color:var(--giallo);}
   /* conto alla rovescia di preparazione */
@@ -283,16 +288,16 @@
 
   .skip{display:block; width:100%; margin-top:10px; background:none; border:none; color:var(--panna);
     opacity:.5; font-family:'Fredoka'; font-size:13px; cursor:pointer; text-decoration:underline;}
-  .tstep h2{font-family:'Anton',sans-serif; font-size:21px; color:var(--giallo); margin-bottom:7px; letter-spacing:.5px;}
+  .tstep h2{font-family:'Anton',sans-serif; font-size:24px; color:var(--giallo); margin-bottom:8px; letter-spacing:.5px;}
   .tstep .big-ic{font-size:38px; margin-bottom:5px;}
   .tstep .box{background:var(--antracite); border:1px solid #000; border-radius:13px; padding:11px 13px;
-    text-align:left; font-size:12.5px; line-height:1.5; margin-top:9px;}
+    text-align:left; font-size:15px; line-height:1.55; margin-top:10px;}
   .tstep .box b{color:var(--giallo);}
-  .tstep .row{display:flex; align-items:flex-start; gap:9px; margin:7px 0; line-height:1.4;}
-  .tstep .row .k{flex:none; width:26px;height:26px;border-radius:50%; display:flex;align-items:center;
+  .tstep .row{display:flex; align-items:flex-start; gap:10px; margin:9px 0; line-height:1.5;}
+  .tstep .row .k{flex:none; width:28px;height:28px;border-radius:50%; display:flex;align-items:center;
     justify-content:center; font-size:15px; font-weight:700;}
   .tstep .k.g{background:var(--verde);} .tstep .k.r{background:var(--rosso);} .tstep .k.o{background:var(--oro); color:#000;}
-  .tstep .persona{display:flex; gap:8px; align-items:flex-start; margin:7px 0; font-size:12.5px; text-align:left; line-height:1.45;}
+  .tstep .persona{display:flex; gap:9px; align-items:flex-start; margin:9px 0; font-size:14.5px; text-align:left; line-height:1.5;}
   .tstep .persona .f{flex:none; width:7px; height:7px; border-radius:50%; background:var(--giallo);
     margin-top:6px; font-size:0; overflow:hidden;}
   .final-score{font-family:'Anton',sans-serif; font-size:20px; margin:8px 0;}
@@ -327,7 +332,7 @@
     <div id="controls"></div>
     <div class="hint" id="hint"></div>
   </div>
-  <div class="footer">Prototipo · v4.2<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
+  <div class="footer">Prototipo · v4.5<br>© 2026 Matteo Murdaca — tutti i diritti riservati</div>
 </div>
 
 <div class="overlay hidden" id="exitOverlay">
@@ -358,7 +363,7 @@
       <span class="mt"><b>IN DUE + BANCO</b><span>2 giocatori + il Banco come terzo sfidante</span></span>
     </button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span id="signVer">v4.2 · © 2026 · tutti i diritti riservati</span></div>
+      <span id="signVer">v4.5 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -373,7 +378,7 @@
     </div>
     <button class="skip" id="skipBtn">salta e gioca</button>
     <div class="sign">un gioco di <b>Matteo Murdaca</b><br>
-      <span>v4.2 · © 2026 · tutti i diritti riservati</span></div>
+      <span>v4.5 · © 2026 · tutti i diritti riservati</span></div>
   </div>
 </div>
 
@@ -419,6 +424,7 @@
     <p id="passMsg" style="font-size:15px"></p>
     <div class="box" id="passBox" style="text-align:left;font-size:13px"></div>
     <button class="cta" id="passBtn">SONO PRONTO</button>
+    <button class="skip" id="passExit">esci dalla partita</button>
   </div>
 </div>
 
@@ -1419,7 +1425,7 @@ let forti=[], deboli=[];
 const CONFIDENT=["L'ho già sentita questa.","Tranquilli, ci sono.","Questa è nelle mie corde."];
 const UNSURE=["Uhm, non vorrei sbagliare…","Questa mi frega, forse.","Categoria ostica per me."];
 
-const TOT=10, START=15, TIME=15;
+const TOT=10, START=15, TIME=20;
 let deck=[], turn=0, me=START, bank=START, current=null, role=null, persona=null, stake=2;
 let timerId=null, timeLeft=0, lastTick=0;
 let bankHits=0, bankMiss=0, bankBetsW=0, bankBetsG=0, bankEasyMiss=0, bankHardHit=0;   // storico per indizi sul carattere
@@ -1765,14 +1771,15 @@ function col(rows,detail){
 function applyDelta(dMe,dBank,win,title,sub){
   me+=dMe; bank+=dBank; updateScores();
   (win ? SFX.win : SFX.lose)();
-  const res=document.createElement('div'); res.className='result '+(win?'win':'lose');
+  const res=document.createElement('div'); res.className='result '+(dMe>0?'win':(dMe<0?'lose':'neutro'));
   const sign=dMe>0?'+':'';
+  const classeMe = dMe>0 ? 'pos' : (dMe<0 ? 'neg' : 'zero');
   // mostra anche la variazione del Banco, così il suo punteggio non cambia "misteriosamente"
   const segnoB = dBank>0?'+':'';
   const rigaBanco = dBank!==0
-    ? `<div class="deltabanco">Banco <b style="color:${dBank>0?'#ff8a82':'#7ee08f'}">${segnoB}${dBank}</b></div>`
+    ? `<div class="deltabanco">Banco <b class="${dBank>0?'pos':'neg'}">${segnoB}${dBank}</b></div>`
     : '';
-  res.innerHTML=`${title}<span class="delta">${sign}${dMe} ${Math.abs(dMe)===1?'moneta':'monete'}</span>
+  res.innerHTML=`${title}<span class="delta ${classeMe}">${sign}${dMe} ${Math.abs(dMe)===1?'moneta':'monete'}</span>
     ${rigaBanco}
     <div style="font-size:12px;opacity:.75;font-weight:400;margin-top:2px">${sub}</div>`;
   $('controls').innerHTML=''; $('controls').appendChild(res);
@@ -2052,7 +2059,7 @@ function pgAskAnswer(){
     ${righe}
     <div style="opacity:.7;font-size:11.5px;margin-top:8px">Qualcuno crede in te, qualcuno no: sai solo
     <b>quanto rischiano</b>, non da che parte stanno.<br>
-    Ora hai <b>15 secondi</b> per rispondere.</div>`;
+    Ora hai <b>20 secondi</b> per rispondere.</div>`;
   $('passBtn').textContent='SONO PRONTO';
   $('passBtn').onclick=()=>pgAnswerScreen();
 }
@@ -2143,10 +2150,10 @@ function pgResolve(correct, st, btn, box, timeout){
   $('cardCat').innerHTML=pgCur.cat+badgeDiff(pgCur.diff);
   $('cardText').innerHTML=col([['La risposta giusta era',.6,13,400,null],[pgCur.a,1,24,600,'var(--giallo)']],pgCur.detail);
 
-  const res=document.createElement('div'); res.className='result '+(correct?'win':'lose');
+  const res=document.createElement('div'); res.className='result '+(dResp>0?'win':(dResp<0?'lose':'neutro'));
   const segno = dResp>0?'+':'';
   res.innerHTML=`<b>${PG[pgResp]}</b> ${correct?'indovina':'sbaglia'}
-    <span class="delta">${segno}${dResp}</span>
+    <span class="delta ${dResp>0?'pos':(dResp<0?'neg':'zero')}">${segno}${dResp}</span>
     <div style="font-size:12px;opacity:.75;font-weight:400">${correct
       ? (ingannati>0?`ha ingannato ${ingannati} giocator${ingannati>1?'i':'e'}!`:'ma nessuno ci era cascato')
       : `perde la posta di ${st}${fiduciosi>0
@@ -2281,9 +2288,9 @@ function duoResolveBanco(ok, postaB){
        <span style="color:var(--giallo);font-size:24px">${pgCur.a}</span>
        ${pgCur.detail?`<span class="detail">${pgCur.detail}</span>`:''}</div>`;
   }
-  const res=document.createElement('div'); res.className='result '+(ok?'lose':'win');
+  const res=document.createElement('div'); res.className='result '+(dB>0?'win':(dB<0?'lose':'neutro'));
   const seg=dB>0?'+':'';
-  res.innerHTML=`<b>Il Banco</b> ${ok?'indovina':'sbaglia'}<span class="delta">${seg}${dB}</span>
+  res.innerHTML=`<b>Il Banco</b> ${ok?'indovina':'sbaglia'}<span class="delta ${dB>0?'pos':(dB<0?'neg':'zero')}">${seg}${dB}</span>
     <div style="font-size:12px;opacity:.75;font-weight:400">${ok
       ? (ingannati>0?`ha ingannato ${ingannati} di voi!`:'lo avevate previsto')
       : `perde la posta di ${postaB}${fiduciosi>0?` + ${fiduciosi} di penale`:''}`}</div>`;
@@ -2316,7 +2323,7 @@ const DSTEPS = [
      <b style="color:var(--oro)">2.</b> Gli altri due scommettono <b>di nascosto</b> se indovinerà o sbaglierà.
      Il Banco decide da solo, senza passaggio di telefono.<br><br>
      <b style="color:var(--oro)">3.</b> Il Rispondente vede quanto hanno puntato gli altri
-     (non su cosa) e ha <b>15 secondi</b> per rispondere.<br><br>
+     (non su cosa) e ha <b>20 secondi</b> per rispondere.<br><br>
      <b style="color:var(--oro)">4.</b> Si scopre tutto e si pagano le monete.
    </div>`},
 
@@ -2379,7 +2386,7 @@ const PSTEPS = [
      <b style="color:var(--oro)">2.</b> Il telefono passa a ogni altro giocatore: sapendo quanto ha dichiarato
      il Rispondente, ognuno sceglie <b>di nascosto</b> la propria posta e se <b>indovinerà</b> o <b>sbaglierà</b>.<br><br>
      <b style="color:var(--oro)">3.</b> Il telefono torna al Rispondente, che vede <b>quanto</b> hanno
-     puntato gli altri (non su cosa): <b>3-2-1</b> e ha <b>15 secondi</b> per rispondere.<br><br>
+     puntato gli altri (non su cosa): <b>3-2-1</b> e ha <b>20 secondi</b> per rispondere.<br><br>
      <b style="color:var(--oro)">4.</b> Si scopre tutto insieme e si pagano le monete.
    </div>`},
 
@@ -2548,16 +2555,24 @@ function stopCoins2(){ if(coins2RAF){ cancelAnimationFrame(coins2RAF); coins2RAF
 const STEPS = [
  {html:`<div class="biglogo"><span class="a">CHI</span><br><span class="b">SBAGLIA</span><br><span class="c">PAGA</span></div>
    <div class="tagline">Scommetti sull'errore degli altri!</div>
-   <p>Non basta sapere le risposte.<br>Devi indovinare <b style="color:var(--giallo)">quando gli altri sbaglieranno</b>.</p>
-   <div class="box">Sfidi il <b>Banco</b> per 10 turni.<br>Partite entrambi con <b>15 monete</b>: vince chi ne ha di più alla fine.</div>`},
+   <p>Non è un quiz normale: qui <b style="color:var(--giallo)">non si vince sapendo le risposte</b>,
+   ma <b style="color:var(--giallo)">sorprendendo l'avversario</b>.</p>
+   <div class="box">
+     <b style="color:var(--giallo)">In due parole:</b><br>
+     Se l'avversario si aspetta che tu indovini e indovini, <b>non guadagni niente</b>: era ovvio.<br><br>
+     Guadagni quando lo <b>spiazzi</b> — e quando prevedi tu i suoi errori.
+     <div style="opacity:.75;margin-top:9px">Sfidi il <b>Banco</b> per 10 turni, si parte da <b>15 monete</b> a testa.</div>
+   </div>`},
 
  {html:`<div class="big-ic">🎤</div><h2>QUANDO RISPONDI TU</h2>
-   <p>Prima scegli <b style="color:var(--giallo)">quanto ci credi</b> (1-3), poi rispondi alla domanda.</p>
+   <p>Il Banco ha già scommesso su di te, <b>di nascosto</b>: pensa che indovinerai o che sbaglierai.</p>
    <div class="box">
-     <div class="row"><span class="k o">1-3</span><span>La tua <b>posta</b>: quanto sei sicuro di indovinare.</span></div>
-     <div class="row"><span class="k g">+</span><span>Rispondi bene <b>e il Banco aveva scommesso che sbagliavi</b>? Vinci la posta: l'hai ingannato!</span></div>
-     <div class="row"><span class="k r">−</span><span>Sbagli (o scade il tempo)? <b>Perdi la posta</b>. E se il Banco aveva indovinato, incassa lui.</span></div>
-     <div style="opacity:.7;margin-top:8px">Se rispondi bene ma il Banco puntava su di te, non guadagni: il premio è per chi lo <b>sorprende</b>.</div>
+     <b style="color:var(--giallo)">Guadagni solo se lo sorprendi.</b><br><br>
+     <div class="row"><span class="k g">+</span><span>Lui pensava che <b>sbagliavi</b> e invece indovini → <b>vinci</b></span></div>
+     <div class="row"><span class="k o">=</span><span>Lui pensava che indovinavi e indovini → <b>zero</b>, era prevedibile</span></div>
+     <div class="row"><span class="k r">−</span><span>Sbagli, o finisce il tempo → <b>perdi</b> la posta</span></div>
+     <div style="opacity:.75;margin-top:9px">Prima di rispondere scegli la <b>posta</b> (1-3): è quanto vinci
+     se lo sorprendi, e quanto perdi se sbagli.</div>
    </div>`},
 
  {html:`<div class="big-ic">🎯</div><h2>QUANDO SCOMMETTI TU</h2>
@@ -2569,18 +2584,15 @@ const STEPS = [
    </div>`},
 
  {html:`<div class="big-ic">🕵️</div><h2>IL BANCO HA UN CARATTERE</h2>
-   <p>Ogni partita ne pesca uno <b style="color:var(--giallo)">a caso e nascosto</b> tra cinque. Cambia come risponde e come scommette — ma <b>non si vede</b>: puoi capirlo solo osservando cosa fa.</p>
+   <p>Ogni partita il Banco ha un <b style="color:var(--giallo)">carattere diverso e nascosto</b>.
+   Non si vede: lo capisci solo guardando come gioca.</p>
    <div class="box">
-     <div class="persona"><span class="f">•</span><span><b>Prudente</b> — risponde bene, ma su di te punta con cautela.</span></div>
-     <div class="persona"><span class="f">•</span><span><b>Spavaldo</b> — sbaglia più di quanto sembri.</span></div>
-     <div class="persona"><span class="f">•</span><span><b>Lunatico</b> — un turno geniale e uno disastroso.</span></div>
-     <div class="persona"><span class="f">•</span><span><b>Specialista</b> — fortissimo in certe categorie, pessimo in altre: guarda di che materia è la domanda.</span></div>
-     <div class="persona"><span class="f">•</span><span><b>Opportunista</b> — ti punta contro quando sei in vantaggio: tieni d'occhio il punteggio.</span></div>
-     <div style="opacity:.7;margin-top:8px">Aspetto e frasi sono <b>sempre uguali</b> per tutti.<br>
-     Usa i due strumenti che hai: la <b style="color:var(--giallo)">difficoltà</b> di ogni domanda
-     (facile / media / tosta, accanto alla categoria) e l'<b>identikit</b> in alto, che segnala
-     se il Banco ha sbagliato domande <b>facili</b> o indovinato quelle <b>toste</b>.
-     Scoprirai chi era solo a fine partita.</div>
+     <div class="persona"><span class="f">•</span><span><b>Sbaglia una domanda facile?</b> È uno spavaldo.</span></div>
+     <div class="persona"><span class="f">•</span><span><b>Indovina quelle toste?</b> È preparato, fidati poco.</span></div>
+     <div class="persona"><span class="f">•</span><span><b>Ti punta contro quando sei avanti?</b> È un opportunista.</span></div>
+     <div style="opacity:.75;margin-top:9px">Ti aiutano la <b style="color:var(--giallo)">difficoltà</b> scritta
+     su ogni domanda e l'<b>identikit</b> in alto, che tiene il conto.<br>
+     A fine partita scopri chi era.</div>
    </div>`},
 
  {html:`<div class="big-ic">⏱️</div><h2>HAI 15 SECONDI</h2>
@@ -2593,17 +2605,16 @@ const STEPS = [
    </div>`},
 
  {html:`<div class="big-ic">🏆</div><h2>SALI DI LIVELLO</h2>
-   <p>Le monete che vinci a fine partita finiscono nel <b style="color:var(--giallo)">salvadanaio</b> e restano salvate. Più ne accumuli, più sali.</p>
+   <p>Le monete vinte finiscono nel <b style="color:var(--giallo)">salvadanaio</b> e restano salvate.</p>
    <div class="box">
-     <div class="row"><span class="k o">🎩</span><span>Salendo di livello il <b>Banco diventa più astuto</b>: papera meno e ti legge meglio.</span></div>
-     <div class="row"><span class="k g">⚽</span><span>A <b>60 monete</b> sblocchi la categoria <b>Calcio italiano</b>,<br>a 140 <b>Anni '80 e '90</b>, a 240 <b>Record estremi</b>.</span></div>
-     <div class="row"><span class="k o">🔍</span><span>A <b>90 monete</b> sblocchi l'aiuto: una volta a partita puoi <b>sbirciare la puntata del Banco</b> prima di rispondere.</span></div>
-     <div style="opacity:.7;margin-top:8px">Da Novellino a <b>Squalo</b>: cinque livelli da scalare.</div>
+     <div class="row"><span class="k o">🎩</span><span>Salendo di livello il <b>Banco diventa più astuto</b>.</span></div>
+     <div class="row"><span class="k g">⚽</span><span>Sblocchi nuove <b>categorie</b>: Calcio, Anni '80-'90, Record.</span></div>
+     <div class="row"><span class="k o">🔍</span><span>A 90 monete puoi <b>sbirciare la puntata del Banco</b>.</span></div>
+     <div style="opacity:.75;margin-top:8px">Da Novellino a <b>Squalo</b>: cinque livelli.</div>
    </div>
-   <div class="box" style="margin-top:10px">
-     <b style="color:var(--giallo)">👥 C'è anche la modalità Tra Amici</b><br>
-     <span style="font-size:12.5px;opacity:.8">Dal menu iniziale: 3-6 giocatori con un solo telefono che gira, oppure <b>In due + Banco</b> se siete in due.
-     Lì il bluff è quello vero, perché vi guardate in faccia.</span>
+   <div class="box" style="margin-top:9px">
+     <b style="color:var(--giallo)">👥 C'è anche il gioco tra amici</b><br>
+     Dal menu: <b>Tra Amici</b> (3-6) o <b>In due + Banco</b>. Lì il bluff è quello vero.
    </div>`}
 ];
 let step=0;
@@ -2683,6 +2694,7 @@ function tornaAlMenu(){
   pgShow('modeOverlay'); startCoins2();
   history.pushState({app:true}, '');
 }
+$('passExit').onclick=()=>{ SFX.tap(); mostraUscita(); };
 $('exitStay').onclick=()=>{ SFX.tap(); chiudiUscita(); history.pushState({app:true},''); };
 $('exitGo').onclick=()=>{ SFX.tap(); tornaAlMenu(); };
 

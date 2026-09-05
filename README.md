@@ -31,14 +31,17 @@ Il ruolo si alterna a ogni turno.
    dichiara pubblicamente **quanto ci crede** (posta 1, 2 o 3), mentre gli altri lo guardano in faccia.
 2. Gli altri, uno alla volta e **di nascosto**, scelgono la propria posta e scommettono se
    **indovinerà** o **sbaglierà**.
-3. Il Rispondente vede **quanto** hanno puntato gli altri (non su cosa) e ha **15 secondi**
+3. Il Rispondente vede **quanto** hanno puntato gli altri (non su cosa) e ha **20 secondi**
    per rispondere davanti a tutti.
 
 Nella Sfida al Banco, dove il telefono resta in mano a te, scegli la posta e rispondi
-direttamente entro 15 secondi.
+direttamente entro 20 secondi.
 
 Ogni domanda mostra accanto alla categoria la sua **difficoltà** (facile / media / tosta):
 è l'indizio che aiuta a leggere sia le proprie scommesse sia il comportamento del Banco.
+
+L'app ha effetti sonori su vincite, errori e conto alla rovescia, e un jingle di apertura.
+Tutto l'audio si disattiva con il pulsante in basso a destra.
 
 ### Punteggio
 
@@ -89,7 +92,7 @@ Prototipo in fase di playtest.
 Esiste anche una versione fisica del gioco (carte, gettoni, regolamento) in Print & Play.
 
 Feedback benvenuti: cosa funziona, cosa annoia, se il Banco è troppo prevedibile
-o troppo casuale, e se 15 secondi sono il tempo giusto.
+o troppo casuale, e se 20 secondi sono il tempo giusto.
 
 ## Contatti
 
